@@ -7,7 +7,10 @@ have fun with image AI
 1. demo site: https://www.remove.bg/upload
 2. 演示效果：
 
-![car](./data/7.jpg)
+
+<img src="./data/7.png" width="200" />
 
 remove background:
-![car_gb](./data/7-removebg-preview.png)
+
+
+<img src="./data/7-removebg-preview.png" width="200" />
