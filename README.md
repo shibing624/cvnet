@@ -8,9 +8,9 @@ have fun with image AI
 2. 演示效果：
 
 
-<img src="./data/7.png" width="200" />
+<img src="./data/7.jpg" width="600" />
 
 remove background:
 
 
-<img src="./data/7-removebg-preview.png" width="200" />
+<img src="./data/7-removebg-preview.png" width="600" />
