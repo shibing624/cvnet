@@ -8,7 +8,7 @@ import os
 import cv2
 import matplotlib.pyplot as plt
 cwd = os.getcwd()
-image_path = os.path.join(cwd, '../../data/7.jpg')
+image_path = os.path.join(cwd, '../../docs/7.jpg')
 img = cv2.imread(image_path, 0)
 ret, th = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
 

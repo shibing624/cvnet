@@ -21,8 +21,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 cwd = os.getcwd()
-image_path = os.path.join(cwd, '../../data/7.jpg')
-# image_path = os.path.join(cwd, '../../data/red_car.png')
+image_path = os.path.join(cwd, '../../docs/7.jpg')
 # Step1: 加载图像
 img = cv2.imread(image_path)
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)

@@ -22,7 +22,7 @@ remove background:
 demo2:
 
 
-<img src="./docs/red_car.jpg" width="600" />
+<img src="./docs/red_car.png" width="600" />
 
 remove background:
 

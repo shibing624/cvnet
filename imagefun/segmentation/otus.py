@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import os
 import cv2
 cwd = os.getcwd()
-image_path = os.path.join(cwd, '../../data/7.jpg')
+image_path = os.path.join(cwd, '../../docs/7.jpg')
 img = cv2.imread(image_path, 0)
 
 
