@@ -1,5 +1,5 @@
-# imagefun
-have fun with image AI
+# cvnet
+Build Model for Computer Vision(CV) Neural Network.
 
 
 ## Demo
