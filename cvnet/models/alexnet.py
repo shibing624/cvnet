@@ -17,8 +17,6 @@ sys.path.append("../..")
 from cvnet.data import fashion_mnist
 from cvnet.trainer import trainer
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
 
 class AlexNet(nn.Module):
     def __init__(self):
@@ -59,9 +57,10 @@ class AlexNet(nn.Module):
 
 
 if __name__ == '__main__':
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     net = AlexNet()
     print(net)
-    batch_size = 8
+    batch_size = 64
     # 我们仍用前面的Fashion-MNIST数据集来演示AlexNet。读取数据的时候我们额外做了一步将图像高和宽扩大到AlexNet使用的图像高和宽224。
     train_iter, test_iter = fashion_mnist.load_data_fashion_mnist(batch_size=batch_size, resize=224)
 

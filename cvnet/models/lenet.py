@@ -16,8 +16,6 @@ sys.path.append("../..")
 from cvnet.data import fashion_mnist
 from cvnet.trainer import trainer
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-
 
 class LeNet(nn.Module):
     def __init__(self):
@@ -45,6 +43,7 @@ class LeNet(nn.Module):
 
 
 if __name__ == '__main__':
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     net = LeNet()
     print(net)
     batch_size = 256

@@ -15,9 +15,7 @@ sys.path.append("../..")
 from cvnet.data import fashion_mnist
 from cvnet.trainer import trainer
 
-from cvnet.models.flatten_layer import Flatten
-
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+from cvnet.models.custom_layer import Flatten
 
 
 def vgg_block(num_convs, in_channels, out_channels):
@@ -60,6 +58,7 @@ def vgg(conv_arch, fc_features, fc_hidden_units=4096):
 net = vgg(conv_arch, fc_features, fc_hidden_units)
 
 if __name__ == '__main__':
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(net)
     X = torch.rand(1, 1, 224, 224)
 
@@ -67,13 +66,14 @@ if __name__ == '__main__':
         X = blk(X)
         print(name, 'output shape:', X.shape)
 
+    print("-" * 42)
     ratio = 8
     small_conv_arch = [(1, 1, 64 // ratio), (1, 64 // ratio, 128 // ratio), (2, 128 // ratio, 256 // ratio),
                        (2, 256 // ratio, 512 // ratio), (2, 512 // ratio, 512 // ratio)]
     net = vgg(small_conv_arch, fc_features // ratio, fc_hidden_units // ratio)
     print(net)
 
-    batch_size = 8
+    batch_size = 128
     # 如出现“out of memory”的报错信息，可减小batch_size或resize
     train_iter, test_iter = fashion_mnist.load_data_fashion_mnist(batch_size, resize=224)
 
