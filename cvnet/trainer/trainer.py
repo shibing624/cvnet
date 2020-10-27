@@ -3,11 +3,9 @@
 @author:XuMing(xuming624@qq.com)
 @description: 
 """
-import sys
 import time
 
 import torch
-from torch import nn
 
 
 def evaluate_accuracy(data_iter, net, device=None):
@@ -21,7 +19,7 @@ def evaluate_accuracy(data_iter, net, device=None):
                 acc_sum += (net(X.to(device)).argmax(dim=1) == y.to(device)).float().sum().cpu().item()
                 net.train()  # 改回训练模式
             else:
-                if ('is_training' in net.__code__.co_varnames):  # 如果有is_training这个参数
+                if 'is_training' in net.__code__.co_varnames:  # 如果有is_training这个参数
                     # 将is_training设置成False
                     acc_sum += (net(X, is_training=False).argmax(dim=1) == y).float().sum().item()
                 else:
@@ -30,10 +28,11 @@ def evaluate_accuracy(data_iter, net, device=None):
     return acc_sum / n
 
 
-def train(net, train_iter, test_iter, batch_size, optimizer, device, num_epochs):
+def train(net, train_iter, test_iter, batch_size, optimizer, device, num_epochs, model_path=''):
     net = net.to(device)
     print("device:", device)
     loss = torch.nn.CrossEntropyLoss()
+    test_accs = []
     for epoch in range(num_epochs):
         train_loss_sum, train_acc_sum, n, batch_count, start = 0.0, 0.0, 0, 0, time.time()
         for X, y in train_iter:
@@ -51,4 +50,8 @@ def train(net, train_iter, test_iter, batch_size, optimizer, device, num_epochs)
         test_acc = evaluate_accuracy(test_iter, net)
         print('epoch %d, loss %.4f, train acc %.3f, test acc %.3f, time %.1f sec'
               % (epoch + 1, train_loss_sum / batch_count, train_acc_sum / n, test_acc, time.time() - start))
-
+        if len(test_accs) == 0 or test_acc > max(test_accs):
+            if model_path:
+                print('best model, saved.', model_path)
+                torch.save(net.state_dict(), model_path)
+        test_accs.append(test_acc)
