@@ -75,6 +75,11 @@ if __name__ == '__main__':
     trainer.train(net, train_iter, test_iter, batch_size, optimizer, device, num_epochs)
 
     print("-" * 42)
-    net = lenet_bn
-    print(net)
-    trainer.train(net, train_iter, test_iter, batch_size, optimizer, device, num_epochs)
+    net_bn = lenet_bn
+    print(net_bn)
+    num_epochs = 5
+    batch_size = 256
+    optimizer = torch.optim.Adam(net_bn.parameters(), lr=lr)
+    train_iter, test_iter = fashion_mnist.load_data_fashion_mnist(batch_size=batch_size)
+
+    trainer.train(net_bn, train_iter, test_iter, batch_size, optimizer, device, num_epochs)
