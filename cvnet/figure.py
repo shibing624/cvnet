@@ -112,6 +112,7 @@ def set_axes(axes, xlabel, ylabel, xlim, ylim, xscale, yscale, legend):
     if legend: axes.legend(legend)
     axes.grid()
 
+
 class Animator(object):
     def __init__(self, xlabel=None, ylabel=None, legend=[], xlim=None,
                  ylim=None, xscale='linear', yscale='linear', fmts=None,
