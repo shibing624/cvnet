@@ -13,7 +13,7 @@ import torch.nn.functional as F
 from torch import nn
 
 sys.path.append("../..")
-from cvnet.data import fashion_mnist, cifar
+from cvnet.data import fashion_mnist
 from cvnet.trainer import trainer
 from cvnet.models.custom_layer import GlobalAvgPool2d, FlattenLayer
 
@@ -67,7 +67,6 @@ net.add_module("resnet_block4", resnet_block(256, 512, 2))
 # 最后，与GoogLeNet一样，加入全局平均池化层后接上全连接层输出。
 net.add_module("global_avg_pool", GlobalAvgPool2d())  # GlobalAvgPool2d的输出: (batch, 512, 1, 1)
 net.add_module("fc", nn.Sequential(FlattenLayer(), nn.Linear(512, 10)))  # 分类：10类
-n_net = net
 
 if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -85,12 +84,5 @@ if __name__ == '__main__':
 
     lr = 0.001
     num_epochs = 5
-    model_path = "resnet_mnist.pt"
     optimizer = torch.optim.Adam(net.parameters(), lr=lr)
-    trainer.train(net, train_iter, test_iter, batch_size, optimizer, device, num_epochs, model_path)
-
-    # 在cifar10数据集上测试
-    print('-' * 42)
-    train_iter, test_iter = cifar.load_data_cifar10(batch_size=batch_size, resize=96)
-    optimizer = torch.optim.Adam(n_net.parameters(), lr=lr)
-    trainer.train(n_net, train_iter, test_iter, batch_size, optimizer, device, num_epochs)
+    trainer.train(net, train_iter, test_iter, batch_size, optimizer, device, num_epochs, model_path='')
