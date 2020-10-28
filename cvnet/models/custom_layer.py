@@ -9,7 +9,7 @@ import torch.nn.functional as F
 from torch import nn
 
 
-class Flatten(torch.nn.Module):
+class FlattenLayer(torch.nn.Module):
     def forward(self, x):
         return x.view(x.shape[0], -1)
 

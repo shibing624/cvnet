@@ -15,7 +15,7 @@ from torch import nn
 sys.path.append("../..")
 from cvnet.data import fashion_mnist
 from cvnet.trainer import trainer
-from cvnet.models.custom_layer import Flatten
+from cvnet.models.custom_layer import FlattenLayer
 
 
 class LeNet(nn.Module):
@@ -52,7 +52,7 @@ lenet_bn = nn.Sequential(
     nn.BatchNorm2d(16),
     nn.Sigmoid(),
     nn.MaxPool2d(2, 2),
-    Flatten(),
+    FlattenLayer(),
     nn.Linear(16 * 4 * 4, 120),
     nn.BatchNorm1d(120),
     nn.Sigmoid(),
@@ -75,11 +75,7 @@ if __name__ == '__main__':
     trainer.train(net, train_iter, test_iter, batch_size, optimizer, device, num_epochs)
 
     print("-" * 42)
-    net_bn = lenet_bn
-    print(net_bn)
-    num_epochs = 5
-    batch_size = 256
-    optimizer = torch.optim.Adam(net_bn.parameters(), lr=lr)
+    print(lenet_bn)
+    optimizer = torch.optim.Adam(lenet_bn.parameters(), lr=lr)
     train_iter, test_iter = fashion_mnist.load_data_fashion_mnist(batch_size=batch_size)
-
-    trainer.train(net_bn, train_iter, test_iter, batch_size, optimizer, device, num_epochs)
+    trainer.train(lenet_bn, train_iter, test_iter, batch_size, optimizer, device, num_epochs)

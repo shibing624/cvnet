@@ -17,7 +17,7 @@ from torch import nn
 sys.path.append("../..")
 from cvnet.data import fashion_mnist
 from cvnet.trainer import trainer
-from cvnet.models.custom_layer import Flatten, GlobalAvgPool2d
+from cvnet.models.custom_layer import FlattenLayer, GlobalAvgPool2d
 
 
 class Inception(nn.Module):
@@ -73,7 +73,7 @@ b5 = nn.Sequential(Inception(832, 256, (160, 320), (32, 128), 128),
 # 最后我们将输出变成二维数组后接上一个输出个数为标签类别数的全连接层。
 net = nn.Sequential(
     b1, b2, b3, b4, b5,
-    Flatten(),
+    FlattenLayer(),
     # 标签类别数是10
     nn.Linear(1024, 10)
 )
@@ -82,7 +82,7 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(net)
     print("-" * 42)
-    net = nn.Sequential(b1, b2, b3, b4, b5, Flatten(), nn.Linear(1024, 10))
+    net = nn.Sequential(b1, b2, b3, b4, b5, FlattenLayer(), nn.Linear(1024, 10))
     print(net)
     X = torch.rand(1, 1, 96, 96)
     for name, blk in net.named_children():

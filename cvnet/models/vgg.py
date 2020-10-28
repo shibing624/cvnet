@@ -15,7 +15,7 @@ sys.path.append("../..")
 from cvnet.data import fashion_mnist
 from cvnet.trainer import trainer
 
-from cvnet.models.custom_layer import Flatten
+from cvnet.models.custom_layer import FlattenLayer
 
 
 def vgg_block(num_convs, in_channels, out_channels):
@@ -43,7 +43,7 @@ def vgg(conv_arch, fc_features, fc_hidden_units=4096):
     for i, (num_convs, in_channels, out_channels) in enumerate(conv_arch):
         net.add_module("vgg_block_" + str(i + 1), vgg_block(num_convs, in_channels, out_channels))
     # fc
-    net.add_module("fc", nn.Sequential(Flatten(),
+    net.add_module("fc", nn.Sequential(FlattenLayer(),
                                        nn.Linear(fc_features, fc_hidden_units),
                                        nn.ReLU(),
                                        nn.Dropout(0.5),
@@ -61,7 +61,6 @@ if __name__ == '__main__':
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(net)
     X = torch.rand(1, 1, 224, 224)
-
     for name, blk in net.named_children():
         X = blk(X)
         print(name, 'output shape:', X.shape)

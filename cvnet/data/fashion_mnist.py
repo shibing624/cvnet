@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+"""
+@author:XuMing(xuming624@qq.com)
+@description: fashion mnist data
+
+"""
+
 import os
 import sys
 

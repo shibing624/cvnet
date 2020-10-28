@@ -16,7 +16,7 @@ from torch import nn
 sys.path.append("../..")
 from cvnet.data import fashion_mnist
 from cvnet.trainer import trainer
-from cvnet.models.custom_layer import Flatten, GlobalAvgPool2d
+from cvnet.models.custom_layer import FlattenLayer, GlobalAvgPool2d
 
 
 def nin_block(in_channels, out_channels, kernel_size, stride, padding):
@@ -40,7 +40,7 @@ net = nn.Sequential(
     # 标签类别数是10
     nin_block(384, 10, 3, 1, 1),
     GlobalAvgPool2d(),
-    Flatten()
+    FlattenLayer()
 )
 
 if __name__ == '__main__':
