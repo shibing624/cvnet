@@ -192,6 +192,7 @@ style_X, styles_Y = get_styles(image_shape, device)
 output = train(content_X, contents_Y, styles_Y, device, 0.01, 500, 200)
 out_img = postprocess(output)
 out_img.show()
+out_img.save("style_small.png")
 
 # 为了得到更加清晰的合成图像，下面我们在更大的300×450尺寸上训练
 image_shape = (300, 450)
@@ -200,4 +201,4 @@ _, style_Y = get_styles(image_shape, device)
 X = preprocess(postprocess(output), image_shape).to(device)
 big_output = train(X, content_Y, style_Y, device, 0.01, 500, 200)
 out_img = postprocess(big_output)
-out_img.show()
+out_img.save("style_big.png")
