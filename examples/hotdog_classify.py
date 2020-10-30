@@ -19,12 +19,13 @@ from torchvision.datasets import ImageFolder
 
 sys.path.append("..")
 
-from cvnet.trainer import trainer
+from cvnet.engine import trainer
 
 
 def load_data_hotdog(batch_size=128, root=os.path.join(
     '~', '.pytorch', 'datasets', 'hotdog')):
     # download hotdog url: https://apache-mxnet.s3-accelerate.amazonaws.com/gluon/dataset/hotdog.zip
+    root = os.path.expanduser(root)
     print(os.listdir(root))  # ['train', 'test']
 
     # 指定RGB三个通道的均值和方差来将图像通道归一化
@@ -45,9 +46,10 @@ def load_data_hotdog(batch_size=128, root=os.path.join(
 
     train_imgs = ImageFolder(os.path.join(root, 'train'), transform=train_augs)
     test_imgs = ImageFolder(os.path.join(root, 'test'), transform=test_augs)
-    train_iter = DataLoader(train_imgs, batch_size)
+    train_iter = DataLoader(train_imgs, batch_size, shuffle=True)
     test_iter = DataLoader(test_imgs, batch_size)
     return train_iter, test_iter
+
 
 def main():
     cwd = os.getcwd()
@@ -63,7 +65,7 @@ def main():
     output_params = list(map(id, pretrained_net.fc.parameters()))
     feature_params = filter(lambda p: id(p) not in output_params, pretrained_net.parameters())
 
-    lr = 0.01
+    lr = 0.001
     optimizer = optim.SGD([{'params': feature_params},
                            {'params': pretrained_net.fc.parameters(), 'lr': lr * 10}],
                           lr=lr, weight_decay=0.001)
@@ -71,6 +73,19 @@ def main():
     num_epochs = 5
     train_iter, test_iter = load_data_hotdog(batch_size)
     trainer.train(pretrained_net, train_iter, test_iter, batch_size, optimizer, device, num_epochs)
+
+
+def main_no_pretrained():
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    scratch_net = models.resnet18(pretrained=False, num_classes=2)
+
+    lr = 0.1
+    optimizer = optim.SGD(scratch_net.parameters(),
+                          lr=lr, weight_decay=0.001)
+    batch_size = 128
+    num_epochs = 5
+    train_iter, test_iter = load_data_hotdog(batch_size)
+    trainer.train(scratch_net, train_iter, test_iter, batch_size, optimizer, device, num_epochs)
 
 
 if __name__ == '__main__':

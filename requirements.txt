@@ -2,5 +2,4 @@ numpy>=1.17.4
 torch
 torchvision==0.2.1
 PIL
-yacs
-ignite
+pytorch-ignite

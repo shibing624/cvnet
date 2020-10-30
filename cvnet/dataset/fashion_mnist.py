@@ -14,8 +14,6 @@ from torchvision import transforms
 
 from ..figure import plt, use_svg_display
 
-print('torchvision:', torchvision.__version__)
-
 
 def load_data_fashion_mnist(batch_size, resize=None, root=os.path.join(
     '~', '.pytorch', 'datasets', 'fashion-mnist')):

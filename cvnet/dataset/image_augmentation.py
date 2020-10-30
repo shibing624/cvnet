@@ -18,13 +18,14 @@ from PIL import Image
 sys.path.append("../..")
 from cvnet.figure import plt, use_svg_display, set_figsize,show_images
 
+if __name__ == '__main__':
 
-img = Image.open('../../docs/7.jpg')
-img.show()
+    img = Image.open('../../docs/7.jpg')
+    img.show()
 
-def apply(img, aug, num_rows=2, num_cols=4, scale=1.5):
-    Y = [aug(img) for i in range(num_rows * num_cols)]
-    show_images(Y, num_rows, num_cols, scale)
+    def apply(img, aug, num_rows=2, num_cols=4, scale=1.5):
+        Y = [aug(img) for i in range(num_rows * num_cols)]
+        show_images(Y, num_rows, num_cols, scale)
 
-apply(img, torchvision.transforms.RandomHorizontalFlip())
-apply(img, torchvision.transforms.RandomVerticalFlip())
+    apply(img, torchvision.transforms.RandomHorizontalFlip())
+    apply(img, torchvision.transforms.RandomVerticalFlip())

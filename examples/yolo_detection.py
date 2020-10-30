@@ -17,6 +17,6 @@ import torchvision
 from PIL import Image
 
 sys.path.append("..")
-
-content_img = Image.open('../docs/rainier.jpg')
-content_img.show()
+if __name__ == '__main__':
+    d = torch.device("cpu")
+    print(d)

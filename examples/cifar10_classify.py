@@ -10,9 +10,9 @@ import torch
 
 sys.path.append("..")
 
-from cvnet.trainer import trainer
+from cvnet.engine import trainer
 from cvnet.models.resnet import net
-from cvnet.data import cifar
+from cvnet.dataset import cifar
 
 
 def main():

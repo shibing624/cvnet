@@ -55,6 +55,8 @@ net_list = []
 for i in range(max(content_layers + style_layers) + 1):
     net_list.append(pretrained_net.features[i])
 net = torch.nn.Sequential(*net_list)
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+net = net.to(device)
 
 
 # 需要中间层的输出，因此这里我们逐层计算，并保留内容层和样式层的输出。
@@ -184,21 +186,24 @@ def train(X, contents_Y, styles_Y, device, lr, max_epochs, lr_decay_epoch):
     return X.detach()
 
 
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-image_shape = (150, 225)
-net = net.to(device)
-content_X, contents_Y = get_contents(image_shape, device)
-style_X, styles_Y = get_styles(image_shape, device)
-output = train(content_X, contents_Y, styles_Y, device, 0.01, 500, 200)
-out_img = postprocess(output)
-out_img.show()
-out_img.save("style_small.png")
+def main():
+    image_shape = (150, 225)
+    content_X, contents_Y = get_contents(image_shape, device)
+    style_X, styles_Y = get_styles(image_shape, device)
+    output = train(content_X, contents_Y, styles_Y, device, 0.01, 500, 200)
+    out_img = postprocess(output)
+    out_img.show()
+    out_img.save("style_small.png")
 
-# 为了得到更加清晰的合成图像，下面我们在更大的300×450尺寸上训练
-image_shape = (300, 450)
-_, content_Y = get_contents(image_shape, device)
-_, style_Y = get_styles(image_shape, device)
-X = preprocess(postprocess(output), image_shape).to(device)
-big_output = train(X, content_Y, style_Y, device, 0.01, 500, 200)
-out_img = postprocess(big_output)
-out_img.save("style_big.png")
+    # 为了得到更加清晰的合成图像，下面我们在更大的300×450尺寸上训练
+    image_shape = (300, 450)
+    _, content_Y = get_contents(image_shape, device)
+    _, style_Y = get_styles(image_shape, device)
+    X = preprocess(postprocess(output), image_shape).to(device)
+    big_output = train(X, content_Y, style_Y, device, 0.01, 500, 200)
+    out_img = postprocess(big_output)
+    out_img.save("style_big.png")
+
+
+if __name__ == '__main__':
+    main()
