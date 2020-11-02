@@ -31,6 +31,19 @@ def save_json(data, json_path, mode='w', encoding='utf-8'):
         f.write(json.dumps(data, ensure_ascii=False, indent=4))
 
 
+def recursive_glob(rootdir=".", suffix=""):
+    """Performs recursive glob with given suffix and rootdir
+        :param rootdir is the root directory
+        :param suffix is the suffix to be searched
+    """
+    return [
+        os.path.join(looproot, filename)
+        for looproot, _, filenames in os.walk(rootdir)
+        for filename in filenames
+        if filename.endswith(suffix)
+    ]
+
+
 if __name__ == '__main__':
     p = '../configs/resnet50_imagenet_classy_config.json'
     a = load_json(p)

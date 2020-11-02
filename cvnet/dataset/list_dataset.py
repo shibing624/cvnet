@@ -32,7 +32,7 @@ class ListDataset:
         self.loader = loader
 
     def __getitem__(self, idx):
-        assert idx >= 0 and idx < len(self)
+        assert 0 <= idx < len(self)
         img = self.loader(self.files[idx])
         item = {"input": img}
         if self.metadata is not None:

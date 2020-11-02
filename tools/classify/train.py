@@ -10,7 +10,7 @@ import sys
 
 import torch.nn.functional as F
 
-sys.path.append('..')
+sys.path.append('../..')
 from cvnet.configs import cfg
 from cvnet.dataset.mnist import load_data_mnist
 from cvnet.engine.trainer import do_train, make_optimizer

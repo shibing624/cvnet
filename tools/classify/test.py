@@ -10,7 +10,7 @@ import sys
 
 import torch
 
-sys.path.append('..')
+sys.path.append('../..')
 from cvnet.configs import cfg
 from cvnet.dataset.mnist import load_data_mnist
 from cvnet.engine.inference import inference
@@ -48,7 +48,7 @@ def main():
     model = build_model(cfg)
     model_path = cfg.TEST.WEIGHT
     if not model_path:
-        model_path = "./checkpoints/mnist_model_11.pt"
+        model_path = "./checkpoints/mnist_model_938.pt"
     model.load_state_dict(torch.load(model_path))
     val_loader = load_data_mnist(cfg, is_train=False)
 

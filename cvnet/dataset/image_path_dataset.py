@@ -20,11 +20,11 @@ def _is_torchvision_imagefolder(image_folder):
             dir_entry = next(folder_iter)
             return dir_entry.is_dir()
         except StopIteration:
-            raise OSError(f"Image folder {image_folder} is empty")
+            raise OSError("Image folder {} is empty".format(image_folder))
 
 
 def _get_image_paths(image_folder):
-    return [f"{image_folder}/{file}" for file in os.listdir(image_folder)]
+    return ["{}/{}".format(image_folder, file) for file in os.listdir(image_folder)]
 
 
 def _load_dataset(image_folder, image_files):
