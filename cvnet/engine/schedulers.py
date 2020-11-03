@@ -69,7 +69,7 @@ key2scheduler = {
 
 
 def get_scheduler(optimizer, scheduler_dict):
-    if scheduler_dict is None:
+    if not scheduler_dict:
         logger.info("Using No LR Scheduling")
         return ConstantLR(optimizer)
 

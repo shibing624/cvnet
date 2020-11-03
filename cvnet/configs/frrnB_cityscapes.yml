@@ -13,6 +13,7 @@ training:
     val_interval: 500
     print_interval: 25
     optimizer:
+        name: 'adam'
         lr: 1.0e-4
     l_rate: 1.0e-4
     l_schedule:
@@ -20,3 +21,4 @@ training:
     weight_decay: 0.0005
     resume: frrnB_cityscapes_best_model.pkl
     visdom: False
+    n_workers: 4
