@@ -195,3 +195,106 @@ class Deconv2DBatchNormRelu(nn.Module):
     def forward(self, inputs):
         outputs = self.dcbr_unit(inputs)
         return outputs
+
+
+class FRRU(nn.Module):
+    """
+    Full Resolution Residual Unit for FRRN
+    """
+
+    def __init__(self, prev_channels, out_channels, scale, group_norm=False, n_groups=None):
+        super(FRRU, self).__init__()
+        self.scale = scale
+        self.prev_channels = prev_channels
+        self.out_channels = out_channels
+        self.group_norm = group_norm
+        self.n_groups = n_groups
+
+        if self.group_norm:
+            conv_unit = Conv2DGroupNormRelu
+            self.conv1 = conv_unit(
+                prev_channels + 32,
+                out_channels,
+                k_size=3,
+                stride=1,
+                padding=1,
+                bias=False,
+                n_groups=self.n_groups,
+            )
+            self.conv2 = conv_unit(
+                out_channels,
+                out_channels,
+                k_size=3,
+                stride=1,
+                padding=1,
+                bias=False,
+                n_groups=self.n_groups,
+            )
+
+        else:
+            conv_unit = Conv2DBatchNormRelu
+            self.conv1 = conv_unit(
+                prev_channels + 32, out_channels, k_size=3, stride=1, padding=1, bias=False
+            )
+            self.conv2 = conv_unit(
+                out_channels, out_channels, k_size=3, stride=1, padding=1, bias=False
+            )
+
+        self.conv_res = nn.Conv2d(out_channels, 32, kernel_size=1, stride=1, padding=0)
+
+    def forward(self, y, z):
+        x = torch.cat([y, nn.MaxPool2d(self.scale, self.scale)(z)], dim=1)
+        y_prime = self.conv1(x)
+        y_prime = self.conv2(y_prime)
+
+        x = self.conv_res(y_prime)
+        upsample_size = torch.Size([_s * self.scale for _s in y_prime.shape[-2:]])
+        x = F.upsample(x, size=upsample_size, mode="nearest")
+        z_prime = z + x
+
+        return y_prime, z_prime
+
+
+class RU(nn.Module):
+    """
+    Residual Unit for FRRN
+    """
+
+    def __init__(self, channels, kernel_size=3, strides=1, group_norm=False, n_groups=None):
+        super(RU, self).__init__()
+        self.group_norm = group_norm
+        self.n_groups = n_groups
+
+        if self.group_norm:
+            self.conv1 = Conv2DGroupNormRelu(
+                channels,
+                channels,
+                k_size=kernel_size,
+                stride=strides,
+                padding=1,
+                bias=False,
+                n_groups=self.n_groups,
+            )
+            self.conv2 = Conv2DGroupNorm(
+                channels,
+                channels,
+                k_size=kernel_size,
+                stride=strides,
+                padding=1,
+                bias=False,
+                n_groups=self.n_groups,
+            )
+
+        else:
+            self.conv1 = Conv2DBatchNormRelu(
+                channels, channels, k_size=kernel_size, stride=strides, padding=1, bias=False
+            )
+            self.conv2 = Conv2DBatchNorm(
+                channels, channels, k_size=kernel_size, stride=strides, padding=1, bias=False
+            )
+
+    def forward(self, x):
+        incoming = x
+        x = self.conv1(x)
+        x = self.conv2(x)
+        return x + incoming

@@ -9,11 +9,11 @@ import torchvision.models as models
 
 from cvnet.models.fcn import Fcn8s, Fcn16s, Fcn32s
 from cvnet.models.segnet import Segnet
-from cvnet.models.unet import UNet
+from cvnet.models.unet import Unet
 # from ptsemseg.models.pspnet import pspnet
 # from ptsemseg.models.icnet import icnet
 # from ptsemseg.models.linknet import linknet
-# from ptsemseg.models.frrn import frrn
+from cvnet.models.frrn import FRRN
 
 
 def get_model(model_dict, n_classes, version=None):
@@ -60,14 +60,14 @@ def _get_model_instance(name):
             "fcn32s": Fcn32s,
             "fcn8s": Fcn8s,
             "fcn16s": Fcn16s,
-            "unet": UNet,
+            "unet": Unet,
             "segnet": Segnet,
             # "pspnet": pspnet,
             # "icnet": icnet,
             # "icnetBN": icnet,
             # "linknet": linknet,
-            # "frrnA": frrn,
-            # "frrnB": frrn,
+            "frrnA": FRRN,
+            "frrnB": FRRN,
         }[name]
     except:
         raise ("Model {} not available".format(name))
