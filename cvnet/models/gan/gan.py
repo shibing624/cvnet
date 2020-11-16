@@ -5,23 +5,26 @@
 """
 
 import os
+import sys
 
 import torch
 import torch.nn as nn
 from torchvision.utils import save_image
 
+sys.path.append("../../..")
 from cvnet.dataset import mnist
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print('device:', device)
 
 latent_size = 64
 hidden_size = 128
-image_size = 784
+image_size = 28 * 28
 num_epochs = 20
 batch_size = 128
 sample_dir = "samples"
 
-data_loader = mnist.load_data_mnist_without_cfg(batch_size=batch_size)
+data_loader, _ = mnist.load_data_mnist_without_cfg(batch_size=batch_size)
 
 # Discriminator
 D = nn.Sequential(
@@ -90,6 +93,10 @@ for epoch in range(num_epochs):
         d_optimizer.step()
 
         # train generator
+        # Compute loss with fake images
+        z = torch.randn(batch_size, latent_size).to(device)
+        fake_images = G(z)
+        outputs = D(fake_images)
         g_loss = loss_fn(outputs, real_labels)
         # backprop and optimizer
         reset_grad()
@@ -101,9 +108,11 @@ for epoch in range(num_epochs):
                 epoch, num_epochs, i + 1, total_step, d_loss.item(), g_loss.item(), real_score.mean().item(),
                 fake_score.mean().item()
             ))
+
     # Save real image
-    images = images.reshape(images.size(0), 1, 28, 28)
-    save_image(denorm((images), os.path.join(sample_dir, 'real_images_{}.png'.format(epoch + 1))))
+    if (epoch + 1) == 1:
+        images = images.reshape(images.size(0), 1, 28, 28)
+        save_image(denorm((images), os.path.join(sample_dir, 'real_images_{}.png'.format(epoch + 1))))
 
     # Save sampled images
     fake_images = fake_images.reshape(fake_images.size(0), 1, 28, 28)
