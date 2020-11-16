@@ -44,7 +44,7 @@ def import_all_packages_from_directory(root: str) -> None:
             # Dots have special meaning in Python packages -- it's a relative
             # import or a subpackage. Skip these.
             if "." not in module_name and module_name not in sys.modules:
-                logging.debug(f"Automatically importing {module_name}")
+                logging.debug("Automatically importing {}".format(module_name))
                 importlib.import_module(module_name)
         except ModuleNotFoundError:
             pass

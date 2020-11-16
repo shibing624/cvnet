@@ -7,7 +7,9 @@
 
 import os
 
+import torchvision
 from torch.utils.data import DataLoader
+from torchvision import transforms
 from torchvision.datasets import MNIST
 
 from .transform import build_transforms
@@ -34,3 +36,24 @@ def load_data_mnist(cfg, is_train=True, root=os.path.join(
         datasets, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
 
     return data_loader
+
+
+def load_data_mnist_without_cfg(batch_size, resize=None, root=os.path.join(
+    '~', '.pytorch', 'datasets', 'mnist'), use_normalize=True):
+    """Download the MNIST dataset and then load into memory."""
+    root = os.path.expanduser(root)
+    transformer = []
+    if resize:
+        transformer += [transforms.Resize(resize)]
+    transformer += [transforms.ToTensor()]
+    if use_normalize:
+        transformer += [transforms.Normalize(mean=[0.5], std=[0.5])]
+    transformer = transforms.Compose(transformer)
+
+    mnist_train = torchvision.datasets.MNIST(root=root, train=True, transform=transformer, download=True)
+    mnist_test = torchvision.datasets.MNIST(root=root, train=False, transform=transformer, download=False)
+    num_workers = 4
+
+    train_iter = DataLoader(mnist_train, batch_size, shuffle=True, num_workers=num_workers)
+    test_iter = DataLoader(mnist_test, batch_size, shuffle=False, num_workers=num_workers)
+    return train_iter, test_iter
