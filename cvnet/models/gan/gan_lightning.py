@@ -20,7 +20,7 @@ from torchvision.datasets import MNIST
 
 # Define dataset
 class MNISTDataModule(pl.LightningDataModule):
-    def __init__(self, data_dir=os.path.join('~', '.pytorch', 'datasets', 'mnist'), batch_size=128, num_workers=4):
+    def __init__(self, data_dir=os.path.join('~', '.pytorch', 'datasets', 'mnist'), batch_size=100, num_workers=4):
         super().__init__()
         self.data_dir = data_dir
         self.batch_size = batch_size
@@ -87,7 +87,7 @@ class Generator(nn.Module):
 
 # Discriminator
 class Discriminator(nn.Module):
-    def __init(self, img_shape, hidden_size=128):
+    def __init__(self, img_shape, hidden_size=128):
         super().__init__()
         self.model = nn.Sequential(
             nn.Linear(int(np.prod(img_shape)), hidden_size * 2),
@@ -95,7 +95,7 @@ class Discriminator(nn.Module):
             nn.Linear(hidden_size * 2, hidden_size),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(hidden_size, 1),
-            nn.Sigmoid(),
+            nn.Sigmoid()
         )
 
     def forward(self, x):
@@ -114,7 +114,7 @@ class GAN(pl.LightningModule):
         # networks
         data_shape = (channels, width, height)
         self.generator = Generator(latent_size=self.latent_size, img_shape=data_shape)
-        self.discriminator = Discriminator(img_shape=data_shape)
+        self.discriminator = Discriminator(data_shape)
 
         self.validataion_z = torch.randn(8, self.latent_size)
         self.example_input_array = torch.zeros(2, self.latent_size)
