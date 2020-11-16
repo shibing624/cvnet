@@ -24,7 +24,11 @@ num_epochs = 20
 batch_size = 128
 sample_dir = "samples"
 
-data_loader, _ = mnist.load_data_mnist_without_cfg(batch_size=batch_size)
+# Create a directory if not exists
+if not os.path.exists(sample_dir):
+    os.makedirs(sample_dir)
+
+data_loader, _ = mnist.load_data_mnist_without_cfg(batch_size=batch_size, use_normalize=False)
 
 # Discriminator
 D = nn.Sequential(
@@ -60,11 +64,6 @@ def denorm(x):
     return out.clamp(0, 1)
 
 
-def reset_grad():
-    d_optimizer.zero_grad()
-    g_optimizer.zero_grad()
-
-
 # train
 total_step = len(data_loader)
 for epoch in range(num_epochs):
@@ -88,7 +87,7 @@ for epoch in range(num_epochs):
         fake_score = outputs
 
         d_loss = d_loss_real + d_loss_fake
-        reset_grad()
+        d_optimizer.zero_grad()
         d_loss.backward()
         d_optimizer.step()
 
@@ -99,7 +98,8 @@ for epoch in range(num_epochs):
         outputs = D(fake_images)
         g_loss = loss_fn(outputs, real_labels)
         # backprop and optimizer
-        reset_grad()
+        d_optimizer.zero_grad()
+        g_optimizer.zero_grad()
         g_loss.backward()
         g_optimizer.step()
 
@@ -112,7 +112,7 @@ for epoch in range(num_epochs):
     # Save real image
     if (epoch + 1) == 1:
         images = images.reshape(images.size(0), 1, 28, 28)
-        save_image(denorm((images), os.path.join(sample_dir, 'real_images_{}.png'.format(epoch + 1))))
+        save_image(denorm(images), os.path.join(sample_dir, 'real_images.png'))
 
     # Save sampled images
     fake_images = fake_images.reshape(fake_images.size(0), 1, 28, 28)
