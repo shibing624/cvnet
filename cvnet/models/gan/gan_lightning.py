@@ -194,9 +194,9 @@ class GAN(pl.LightningModule):
 
 
 if __name__ == '__main__':
-    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
     dm = MNISTDataModule()
     print(dm.img_shape)
     model = GAN(*dm.img_shape)
-    trainer = pl.Trainer(gpus=1, max_epochs=5, progress_bar_refresh_rate=20)
+    trainer = pl.Trainer(gpus=4, max_epochs=10, progress_bar_refresh_rate=20)
     trainer.fit(model, dm)
