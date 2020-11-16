@@ -15,10 +15,12 @@ training:
     optimizer:
         name: 'adam'
         lr: 1.0e-4
-    l_rate: 1.0e-4
-    l_schedule:
+    lr_schedule:
     momentum: 0.99
     weight_decay: 0.0005
+    loss:
+        name: 'cross_entropy'
+        size_average: False
     resume: frrnB_cityscapes_best_model.pkl
     visdom: False
     n_workers: 4

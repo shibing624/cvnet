@@ -1,7 +1,7 @@
 import os
 import torch
 import numpy as np
-import scipy.misc as m
+import cv2
 
 from torch.utils import data
 
@@ -153,11 +153,11 @@ class CityscapesDataset(data.Dataset):
             os.path.basename(img_path)[:-15] + "gtFine_labelIds.png",
         )
 
-        img = m.imread(img_path)
-        img = np.array(img, dtype=np.uint8)
+        img = cv2.imread(img_path)
+        # img = np.array(img, dtype=np.uint8)
 
-        lbl = m.imread(lbl_path)
-        lbl = self.encode_segmap(np.array(lbl, dtype=np.uint8))
+        lbl = cv2.imread(lbl_path)
+        lbl = self.encode_segmap(lbl)
 
         if self.augmentations is not None:
             img, lbl = self.augmentations(img, lbl)
@@ -173,7 +173,7 @@ class CityscapesDataset(data.Dataset):
         :param img:
         :param lbl:
         """
-        img = m.imresize(img, (self.img_size[0], self.img_size[1]))  # uint8 with RGB mode
+        img = cv2.resize(img, (self.img_size[0], self.img_size[1]))  # uint8 with RGB mode
         img = img[:, :, ::-1]  # RGB -> BGR
         img = img.astype(np.float64)
         img -= self.mean
@@ -186,7 +186,7 @@ class CityscapesDataset(data.Dataset):
 
         classes = np.unique(lbl)
         lbl = lbl.astype(float)
-        lbl = m.imresize(lbl, (self.img_size[0], self.img_size[1]), "nearest", mode="F")
+        lbl = cv2.resize(lbl, (self.img_size[0], self.img_size[1]))
         lbl = lbl.astype(int)
 
         if not np.all(classes == np.unique(lbl)):
