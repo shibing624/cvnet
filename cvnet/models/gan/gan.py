@@ -21,7 +21,7 @@ latent_size = 64
 hidden_size = 128
 image_size = 28 * 28
 num_epochs = 20
-batch_size = 128
+batch_size = 100
 sample_dir = "samples"
 
 # Create a directory if not exists
@@ -119,5 +119,5 @@ for epoch in range(num_epochs):
     save_image(denorm(fake_images), os.path.join(sample_dir, 'fake_images_{}.png'.format(epoch + 1)))
 
 # Save the model checkpoints
-torch.save(G.state_dict(), 'G.ckpt')
-torch.save(D.state_dict(), 'D.ckpt')
+torch.save(G.state_dict(), 'G.pt')
+torch.save(D.state_dict(), 'D.pt')

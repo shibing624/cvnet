@@ -5,32 +5,32 @@
 """
 
 import os
-from argparse import ArgumentParser
 from collections import OrderedDict
+
 import numpy as np
-import  torch
+import pytorch_lightning as pl
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torchvision
 import torchvision.transforms as T
 from torch.utils.data import DataLoader, random_split
 from torchvision.datasets import MNIST
-import pytorch_lightning as pl
 
 
 # Define dataset
 class MNISTDataModule(pl.LightningDataModule):
-    def __init__(self, data_dir=os.path.join('~', '.pytorch', 'datasets', 'mnist'), batch_size=128, num_workers = 4):
+    def __init__(self, data_dir=os.path.join('~', '.pytorch', 'datasets', 'mnist'), batch_size=128, num_workers=4):
         super().__init__()
         self.data_dir = data_dir
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.transform = T.Compose([
             T.ToTensor(),
-            T.Normalize((0.1307,),(0.3081,))
+            T.Normalize((0.1307,), (0.3081,))
         ])
 
-        self.dims = (1,28,28)
+        self.img_shape = (1, 28, 28)
         self.num_classes = 10
 
     def prepare_data(self):
@@ -52,13 +52,14 @@ class MNISTDataModule(pl.LightningDataModule):
 
     def val_dataloader(self):
         return DataLoader(self.mnist_val, batch_size=self.batch_size, num_workers=self.num_workers)
+
     def test_dataloader(self):
         return DataLoader(self.mnist_test, batch_size=self.batch_size, num_workers=self.num_workers)
 
+
 # Generator
 class Generator(nn.Module):
-
-    def __init__(self, latent_size, img_shape,hidden_size = 128):
+    def __init__(self, latent_size, img_shape, hidden_size=128):
         super().__init__()
         self.img_shape = img_shape
 
@@ -71,35 +72,131 @@ class Generator(nn.Module):
 
         self.model = nn.Sequential(
             *block(latent_size, hidden_size, normalize=False),
-            *block(hidden_size,hidden_size*2),
-            *block(hidden_size*2,hidden_size*4),
-            *block(hidden_size*4, hidden_size*8),
-            nn.Linear(hidden_size*8, int(np.prod(img_shape))),
+            *block(hidden_size, hidden_size * 2),
+            *block(hidden_size * 2, hidden_size * 4),
+            *block(hidden_size * 4, hidden_size * 8),
+            nn.Linear(hidden_size * 8, int(np.prod(img_shape))),
             nn.Tanh()
         )
 
-    def forward(self,x):
+    def forward(self, x):
         img = self.model(x)
         img = img.view(img.size(0), *self.img_shape)
         return img
 
-# D
+
+# Discriminator
 class Discriminator(nn.Module):
-    def __init(self, img_shape,hidden_size=128):
+    def __init(self, img_shape, hidden_size=128):
         super().__init__()
         self.model = nn.Sequential(
-            nn.Linear(int(np.prod(img_shape)), hidden_size*2),
+            nn.Linear(int(np.prod(img_shape)), hidden_size * 2),
             nn.LeakyReLU(0.2, inplace=True),
-            nn.Linear(hidden_size*2, hidden_size),
+            nn.Linear(hidden_size * 2, hidden_size),
             nn.LeakyReLU(0.2, inplace=True),
             nn.Linear(hidden_size, 1),
             nn.Sigmoid(),
         )
 
-    def forward(self,x):
+    def forward(self, x):
         x_flat = x.view(x.size(0), -1)
         out = self.model(x_flat)
         return out
 
 
+class GAN(pl.LightningModule):
+    def __init__(self, channels, width, height, latent_size=100, lr=0.0002, **kwargs):
+        super().__init__()
+        self.latent_size = latent_size
+        self.lr = lr
+        self.save_hyperparameters()
 
+        # networks
+        data_shape = (channels, width, height)
+        self.generator = Generator(latent_size=self.latent_size, img_shape=data_shape)
+        self.discriminator = Discriminator(img_shape=data_shape)
+
+        self.validataion_z = torch.randn(8, self.latent_size)
+        self.example_input_array = torch.zeros(2, self.latent_size)
+
+    def forward(self, z):
+        return self.generator(z)
+
+    def adversarial_loss(self, y_hat, y):
+        return F.binary_cross_entropy(y_hat, y)
+
+    def training_step(self, batch, batch_idx, optimizer_idx):
+        imgs, _ = batch
+
+        # sample noise
+        z = torch.randn(imgs.shape[0], self.latent_size)
+        z = z.type_as(imgs)
+
+        # train G
+        if optimizer_idx == 0:
+            # generate images
+            self.generated_imgs = self(z)
+
+            sample_imgs = self.generated_imgs[:6]
+            grid = torchvision.utils.make_grid(sample_imgs)
+            self.logger.experiment.add_image('generated_images', grid, 0)
+
+            # ground truth result (ie: all fake)
+            valid = torch.ones(imgs.size(0), 1)
+            valid = valid.type_as(imgs)
+
+            # BCEloss
+            g_loss = self.adversarial_loss(self.discriminator(self(z)), valid)
+            tqdm_dict = {'g_loss': g_loss}
+            output = OrderedDict({
+                "loss": g_loss,
+                "progress_bar": tqdm_dict,
+                "log": tqdm_dict
+            })
+            return output
+
+        # train D
+        if optimizer_idx == 1:
+            valid = torch.ones(imgs.size(0), 1)
+            valid = valid.type_as(imgs)
+
+            real_loss = self.adversarial_loss(self.discriminator(imgs), valid)
+
+            fake = torch.zeros(imgs.size(0), 1)
+            fake = fake.type_as(imgs)
+            fake_loss = self.adversarial_loss(self.discriminator(self(z).detach()), fake)
+
+            # D loss
+            d_loss = (real_loss + fake_loss) / 2
+            tqdm_dict = {'d_loss': d_loss}
+            output = OrderedDict({
+                "loss": d_loss,
+                "progress_bar": tqdm_dict,
+                "log": tqdm_dict
+            })
+            return output
+
+    def configure_optimizers(self):
+        lr = self.lr  # self.hparams.lr
+
+        opt_g = torch.optim.Adam(self.generator.parameters(), lr=lr)
+        opt_d = torch.optim.Adam(self.discriminator.parameters(), lr=lr)
+
+        return [opt_g, opt_d], []
+
+    def on_epoch_end(self):
+        z = self.validataion_z.type_as(self.generator.model[0].weight)
+
+        # log sampled images
+        sample_imgs = self(z)
+        grid = torchvision.utils.make_grid(sample_imgs)
+        self.logger.experiment.add_image('generated_images', grid, self.current_epoch)
+
+
+if __name__ == '__main__':
+    os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+    dm = MNISTDataModule()
+    print(dm.img_shape)
+    model = GAN(*dm.img_shape)
+    trainer = pl.Trainer(gpus=1, max_epochs=5, progress_bar_refresh_rate=20)
+    trainer.fit(model, dm)
