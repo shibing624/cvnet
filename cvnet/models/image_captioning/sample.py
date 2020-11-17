@@ -4,16 +4,16 @@
 @description: 
 """
 
-import torch
-import matplotlib.pyplot as plt
-import numpy as np
 import argparse
 import pickle
-import os
-from torchvision import transforms
-from .build_vocab import Vocabulary
-from .model import EncoderCNN, DecoderRNN
+
+import matplotlib.pyplot as plt
+import numpy as np
+import torch
 from PIL import Image
+from torchvision import transforms
+
+from cvnet.models.image_captioning.model import EncoderCNN, DecoderRNN
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

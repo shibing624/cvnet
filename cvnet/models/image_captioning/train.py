@@ -4,14 +4,16 @@
 @description: 
 """
 import argparse
-import torch
-import torch.nn as nn
-import numpy as np
 import os
 import pickle
-from data_loader import get_loader
-from build_vocab import Vocabulary
-from model import EncoderCNN, DecoderRNN
+import sys
+
+import numpy as np
+import torch
+import torch.nn as nn
+
+from cvnet.models.image_captioning.data_loader import get_loader
+from cvnet.models.image_captioning.model import EncoderCNN, DecoderRNN
 from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import transforms
 
