@@ -1,9 +1,8 @@
 matplotlib==2.0.0
 numpy>=1.17.4
-torch
+torch>=1.4.0
 torchvision==0.2.1
-pytorch-lightning
-pytorch-lightning-bolts
+pytorch-lightning==1.0.6
 pytorch-ignite
 pydensecrf
 nltk

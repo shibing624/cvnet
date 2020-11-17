@@ -9,8 +9,9 @@ from argparse import ArgumentParser
 
 import pytorch_lightning as pl
 import torch
-from pl_bolts.datamodules import CIFAR10DataModule
-from pl_bolts.models.autoencoders import VAE
+
+from cvnet.models.vae.basic_vae_module import VAE
+from cvnet.models.vae.cifar10_datamodule import CIFAR10DataModule
 
 if __name__ == "__main__":
     os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
