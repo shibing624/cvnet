@@ -5,7 +5,7 @@
 
 reference: https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/03-advanced/image_captioning/build_vocab.py
 """
-
+import os
 import nltk
 import pickle
 import argparse
@@ -65,6 +65,9 @@ def build_vocab(json, threshold):
 def main(args):
     vocab = build_vocab(json=args.caption_path, threshold=args.threshold)
     vocab_path = args.vocab_path
+    vocab_dir = os.path.dirname(vocab_path)
+    if not os.path.exists(vocab_dir):
+        os.makedirs(vocab_dir)
     with open(vocab_path, 'wb') as f:
         pickle.dump(vocab, f)
     print("Total vocabulary size: {}".format(len(vocab)))
