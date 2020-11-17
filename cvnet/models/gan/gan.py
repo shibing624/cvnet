@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 @author:XuMing(xuming624@qq.com)
-@description: 
+@description:
+
+reference: https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/03-advanced/generative_adversarial_network/main.py
 """
 
 import os
@@ -22,6 +24,7 @@ hidden_size = 128
 image_size = 28 * 28
 num_epochs = 20
 batch_size = 100
+lr = 0.0002
 sample_dir = "samples"
 
 # Create a directory if not exists
@@ -55,8 +58,8 @@ G = G.to(device)
 
 # Binary cross entropy loss and optimizer
 loss_fn = nn.BCELoss()
-d_optimizer = torch.optim.Adam(D.parameters(), lr=0.0002)
-g_optimizer = torch.optim.Adam(G.parameters(), lr=0.0002)
+d_optimizer = torch.optim.Adam(D.parameters(), lr=lr)
+g_optimizer = torch.optim.Adam(G.parameters(), lr=lr)
 
 
 def denorm(x):

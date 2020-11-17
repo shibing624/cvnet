@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 @author:XuMing(xuming624@qq.com)
-@description: 
+@description:
+
+reference: https://colab.research.google.com/github/PytorchLightning/pytorch-lightning/blob/master/notebooks/03-basic-gan.ipynb#scrollTo=DOY_nHu328g7
+
 """
 
 import os
@@ -198,5 +201,8 @@ if __name__ == '__main__':
     dm = MNISTDataModule()
     print(dm.img_shape)
     model = GAN(*dm.img_shape)
-    trainer = pl.Trainer(gpus=4, max_epochs=10, progress_bar_refresh_rate=20)
+    if torch.cuda.is_available():
+        trainer = pl.Trainer(gpus=4, max_epochs=10, progress_bar_refresh_rate=20)
+    else:
+        trainer = pl.Trainer(max_epochs=10)
     trainer.fit(model, dm)
