@@ -5,16 +5,18 @@
 
 reference: https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/03-advanced/image_captioning/build_vocab.py
 """
-import os
-import nltk
-import pickle
 import argparse
+import os
+import pickle
 from collections import Counter
+
+import nltk
 from pycocotools.coco import COCO
 
 
 class Vocabulary(object):
     """Simple vocabulary wrapper."""
+
     def __init__(self):
         self.word2idx = {}
         self.idx2word = {}
@@ -34,6 +36,7 @@ class Vocabulary(object):
     def __len__(self):
         return len(self.word2idx)
 
+
 def build_vocab(json, threshold):
     """Build a simple vocabulary wrapper."""
     coco = COCO(json)
@@ -44,8 +47,8 @@ def build_vocab(json, threshold):
         tokens = nltk.tokenize.word_tokenize(caption.lower())
         counter.update(tokens)
 
-        if (i+1) % 1000 == 0:
-            print("[{}/{}] Tokenized the captions.".format(i+1, len(ids)))
+        if (i + 1) % 1000 == 0:
+            print("[{}/{}] Tokenized the captions.".format(i + 1, len(ids)))
 
     # If the word frequency is less than 'threshold', then the word is discarded.
     words = [word for word, cnt in counter.items() if cnt >= threshold]
@@ -61,6 +64,7 @@ def build_vocab(json, threshold):
     for i, word in enumerate(words):
         vocab.add_word(word)
     return vocab
+
 
 def main(args):
     vocab = build_vocab(json=args.caption_path, threshold=args.threshold)

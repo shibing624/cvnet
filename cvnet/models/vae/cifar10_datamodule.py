@@ -8,20 +8,34 @@ import os
 from warnings import warn
 
 import torch
-from pl_bolts.transforms.dataset_normalizations import cifar10_normalization
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader, random_split
 
 try:
     from torchvision import transforms as transform_lib
     from torchvision.datasets import CIFAR10
-
 except ImportError:
     warn('You want to use `torchvision` which is not installed yet,'  # pragma: no-cover
          ' install it with `pip install torchvision`.')
     _TORCHVISION_AVAILABLE = False
 else:
     _TORCHVISION_AVAILABLE = True
+
+
+def imagenet_normalization():
+    normalize = transform_lib.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    return normalize
+
+
+def cifar10_normalization():
+    normalize = transform_lib.Normalize(mean=[x / 255.0 for x in [125.3, 123.0, 113.9]],
+                                        std=[x / 255.0 for x in [63.0, 62.1, 66.7]])
+    return normalize
+
+
+def stl10_normalization():
+    normalize = transform_lib.Normalize(mean=(0.43, 0.42, 0.39), std=(0.27, 0.26, 0.27))
+    return normalize
 
 
 class CIFAR10DataModule(LightningDataModule):

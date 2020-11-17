@@ -16,7 +16,6 @@ from .resnet import resnet50_encoder, resnet50_decoder
 
 
 class VAE(pl.LightningModule):
-
     pretrained_urls = {
         'cifar10-resnet18':
             'https://pl-bolts-weights.s3.us-east-2.amazonaws.com/vae/vae-cifar10/checkpoints/epoch%3D89.ckpt',
@@ -25,16 +24,16 @@ class VAE(pl.LightningModule):
     }
 
     def __init__(
-        self,
-        input_height,
-        enc_type='resnet18',
-        first_conv=False,
-        maxpool1=False,
-        enc_out_dim=512,
-        kl_coeff=0.1,
-        latent_dim=256,
-        lr=1e-4,
-        **kwargs
+            self,
+            input_height,
+            enc_type='resnet18',
+            first_conv=False,
+            maxpool1=False,
+            enc_out_dim=512,
+            kl_coeff=0.1,
+            latent_dim=256,
+            lr=1e-4,
+            **kwargs
     ):
         """
         Standard VAE with Gaussian Prior and approx posterior.
@@ -179,42 +178,3 @@ class VAE(pl.LightningModule):
         parser.add_argument("--data_dir", type=str, default=".")
 
         return parser
-
-
-def cli_main(args=None):
-    from pl_bolts.datamodules import CIFAR10DataModule, ImagenetDataModule, STL10DataModule
-
-    pl.seed_everything()
-
-    parser = ArgumentParser()
-    parser.add_argument("--dataset", default="cifar10", type=str, choices=["cifar10", "stl10", "imagenet"])
-    script_args, _ = parser.parse_known_args(args)
-
-    if script_args.dataset == "cifar10":
-        dm_cls = CIFAR10DataModule
-    elif script_args.dataset == "stl10":
-        dm_cls = STL10DataModule
-    elif script_args.dataset == "imagenet":
-        dm_cls = ImagenetDataModule
-    else:
-        raise ValueError(f"undefined dataset {script_args.dataset}")
-
-    parser = VAE.add_model_specific_args(parser)
-    parser = pl.Trainer.add_argparse_args(parser)
-    args = parser.parse_args(args)
-
-    dm = dm_cls.from_argparse_args(args)
-    args.input_height = dm.size()[-1]
-
-    if args.max_steps == -1:
-        args.max_steps = None
-
-    model = VAE(**vars(args))
-
-    trainer = pl.Trainer.from_argparse_args(args)
-    trainer.fit(model, dm)
-    return dm, model, trainer
-
-
-if __name__ == "__main__":
-    dm, model, trainer = cli_main()
