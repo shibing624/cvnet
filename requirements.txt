@@ -2,8 +2,11 @@ matplotlib==2.0.0
 numpy>=1.17.4
 torch
 torchvision==0.2.1
-PIL
 pytorch-lightning
 pytorch-lightning-bolts
 pytorch-ignite
 pydensecrf
+nltk
+numpy
+Pillow
+argparse
