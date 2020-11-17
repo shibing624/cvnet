@@ -22,7 +22,7 @@ print('device:', device)
 latent_size = 64
 hidden_size = 128
 image_size = 28 * 28
-num_epochs = 20
+num_epochs = 100
 batch_size = 100
 lr = 0.0002
 sample_dir = "samples"

@@ -202,7 +202,7 @@ if __name__ == '__main__':
     print(dm.img_shape)
     model = GAN(*dm.img_shape)
     if torch.cuda.is_available():
-        trainer = pl.Trainer(gpus=4, max_epochs=10, progress_bar_refresh_rate=20)
+        trainer = pl.Trainer(gpus=4, max_epochs=100, progress_bar_refresh_rate=20)
     else:
-        trainer = pl.Trainer(max_epochs=10)
+        trainer = pl.Trainer(max_epochs=2)
     trainer.fit(model, dm)

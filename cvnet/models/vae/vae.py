@@ -23,7 +23,7 @@ print('device:', device)
 hidden_size = 400
 z_size = 20
 image_size = 28 * 28
-num_epochs = 20
+num_epochs = 100
 batch_size = 100
 lr = 0.0001
 sample_dir = "samples"
@@ -67,6 +67,10 @@ class VAE(nn.Module):
 model = VAE().to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
+m = iter(data_loader)
+n = next(m)
+print(n)
+
 # start training
 for epoch in range(num_epochs):
     for i, (x, _) in enumerate(data_loader):
@@ -84,7 +88,7 @@ for epoch in range(num_epochs):
 
         if (i + 1) % 10 == 0:
             print('Epoch [{}/{}], Step [{}/{}], Reconst Loss: {:.4f}, KL Div: {:.4f}'.format(
-                epoch, num_epochs, i + 1, len(data_loader), reconst_loss.item(), kl_div.item()
+                epoch + 1, num_epochs, i + 1, len(data_loader), reconst_loss.item(), kl_div.item()
             ))
 
     with torch.no_grad():
