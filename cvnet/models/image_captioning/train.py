@@ -11,11 +11,13 @@ import sys
 import numpy as np
 import torch
 import torch.nn as nn
-
-from cvnet.models.image_captioning.data_loader import get_loader
-from cvnet.models.image_captioning.model import EncoderCNN, DecoderRNN
 from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import transforms
+
+sys.path.append("../../..")
+from cvnet.models.image_captioning.data_loader import get_loader
+from cvnet.models.image_captioning.model import EncoderCNN, DecoderRNN
+from cvnet.models.image_captioning.build_vocab import Vocabulary
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -102,7 +104,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--num_epochs', type=int, default=5)
     parser.add_argument('--batch_size', type=int, default=128)
-    parser.add_argument('--num_workers', type=int, default=2)
+    parser.add_argument('--num_workers', type=int, default=4)
     parser.add_argument('--learning_rate', type=float, default=0.001)
     args = parser.parse_args()
     print(args)

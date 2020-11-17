@@ -6,6 +6,7 @@
 
 import argparse
 import pickle
+import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -13,7 +14,9 @@ import torch
 from PIL import Image
 from torchvision import transforms
 
+sys.path.append("../../..")
 from cvnet.models.image_captioning.model import EncoderCNN, DecoderRNN
+from cvnet.models.image_captioning.build_vocab import Vocabulary
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

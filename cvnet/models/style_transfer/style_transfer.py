@@ -8,7 +8,7 @@
 用格拉姆矩阵表达样式层输出的样式。
 """
 
-import sys
+import os
 import time
 
 import numpy as np
@@ -17,13 +17,12 @@ import torch.nn.functional as F
 import torchvision
 from PIL import Image
 
-sys.path.append("..")
+print(os.getcwd())
+content_img = Image.open('../../../docs/rainier.jpg')
+content_img.show()
 
-content_img = Image.open('../docs/rainier.jpg')
-# content_img.show()
-
-style_img = Image.open('../docs/autumn_oak.jpg')
-# style_img.show()
+style_img = Image.open('../../../docs/autumn_oak.jpg')
+style_img.show()
 
 # 预处理和后处理图像
 rgb_mean = np.array([0.485, 0.456, 0.406])
@@ -56,6 +55,7 @@ for i in range(max(content_layers + style_layers) + 1):
     net_list.append(pretrained_net.features[i])
 net = torch.nn.Sequential(*net_list)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print("device:", device)
 net = net.to(device)
 
 

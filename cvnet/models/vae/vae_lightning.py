@@ -5,11 +5,13 @@
 """
 
 import os
+import sys
 from argparse import ArgumentParser
 
 import pytorch_lightning as pl
 import torch
 
+sys.path.append("../../..")
 from cvnet.models.vae.basic_vae_module import VAE
 from cvnet.models.vae.cifar10_datamodule import CIFAR10DataModule
 

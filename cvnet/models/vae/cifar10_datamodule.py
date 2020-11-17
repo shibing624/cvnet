@@ -7,7 +7,6 @@
 import os
 from warnings import warn
 
-import torch
 from pytorch_lightning import LightningDataModule
 from torch.utils.data import DataLoader, random_split
 
@@ -136,8 +135,7 @@ class CIFAR10DataModule(LightningDataModule):
         train_length = len(dataset)
         dataset_train, _ = random_split(
             dataset,
-            [train_length - self.val_split, self.val_split],
-            generator=torch.Generator().manual_seed(self.seed)
+            [train_length - self.val_split, self.val_split]
         )
         loader = DataLoader(
             dataset_train,
@@ -159,8 +157,7 @@ class CIFAR10DataModule(LightningDataModule):
         train_length = len(dataset)
         _, dataset_val = random_split(
             dataset,
-            [train_length - self.val_split, self.val_split],
-            generator=torch.Generator().manual_seed(self.seed)
+            [train_length - self.val_split, self.val_split]
         )
         loader = DataLoader(
             dataset_val,
