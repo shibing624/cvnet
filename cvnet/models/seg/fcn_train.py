@@ -129,4 +129,5 @@ if __name__ == "__main__":
     parser.add_argument('--show_vgg_params', type=bool, default=False)
     args = parser.parse_args()
     print(args)
+
     train(args.num_epochs, args.show_vgg_params, args.data_dir)
