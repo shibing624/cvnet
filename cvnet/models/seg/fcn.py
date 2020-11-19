@@ -3,8 +3,8 @@
 @author:XuMing(xuming624@qq.com)
 @description: 
 """
-
 import torch.nn as nn
+from torchvision import models
 from torchvision.models.vgg import VGG
 
 
@@ -157,7 +157,8 @@ class VGGNet(VGG):
         self.ranges = ranges[model]
 
         if pretrained:
-            exec("self.load_state_dict(models.%s(pretrained=True).state_dict())" % model)
+            # exec("self.load_state_dict(models.%s(pretrained=True).state_dict())" % model)
+            self.load_state_dict(models.vgg19(pretrained=True).state_dict())
 
         if not requires_grad:
             for param in super().parameters():
