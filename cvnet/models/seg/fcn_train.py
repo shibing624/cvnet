@@ -4,6 +4,7 @@
 @description: 
 """
 import argparse
+import os
 import sys
 from datetime import datetime
 
@@ -22,8 +23,11 @@ from cvnet.models.seg.fcn import FCNs, VGGNet
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
-def train(num_epochs=50, show_vgg_params=False, data_dir=''):
+def train(num_epochs=50, show_vgg_params=False, data_dir='', model_save_dir='./checkpoints/'):
     train_dataloader, test_dataloader = load_data(data_dir)
+    if not os.path.exists(model_save_dir):
+        os.makedirs(model_save_dir)
+
     # vis = visdom.Visdom()
     vgg_model = VGGNet(requires_grad=True, show_params=show_vgg_params)
     fcn_model = FCNs(pretrained_net=vgg_model, n_class=2)
@@ -36,7 +40,7 @@ def train(num_epochs=50, show_vgg_params=False, data_dir=''):
 
     # start timing
     prev_time = datetime.now()
-    for epo in range(num_epochs):
+    for epoch in range(num_epochs):
         train_loss = 0.
         fcn_model.train()
         for index, (bag, bag_msk) in enumerate(train_dataloader):
@@ -62,7 +66,7 @@ def train(num_epochs=50, show_vgg_params=False, data_dir=''):
             bag_msk_np = np.argmin(bag_msk_np, axis=1)
 
             if np.mod(index, 15) == 0:
-                print('epoch {}, {}/{},train loss is {}'.format(epo, index, len(train_dataloader), iter_loss))
+                print('epoch: {}, iter: {}/{}, train loss: {}'.format(epoch, index, len(train_dataloader), iter_loss))
                 # vis.images(output_np[:, None, :, :], win='train_pred', opts=dict(title='train prediction'))
                 # vis.images(bag_msk_np[:, None, :, :], win='train_label', opts=dict(title='label'))
                 # vis.line(all_train_iter_loss, win='train_iter_loss', opts=dict(title='train iter loss'))
@@ -74,7 +78,7 @@ def train(num_epochs=50, show_vgg_params=False, data_dir=''):
                 plt.pause(0.5)
                 plt.savefig('train_{}.png'.format(index))
 
-        test_loss = 0
+        test_loss = 0.
         fcn_model.eval()
         with torch.no_grad():
             for index, (bag, bag_msk) in enumerate(test_dataloader):
@@ -95,7 +99,7 @@ def train(num_epochs=50, show_vgg_params=False, data_dir=''):
                 bag_msk_np = bag_msk.cpu().detach().numpy().copy()  # bag_msk_np.shape = (4, 2, 160, 160)
                 bag_msk_np = np.argmin(bag_msk_np, axis=1)
 
-                if np.mod(index, 15) == 0:
+                if np.mod(index, 5) == 0:
                     # print(r'Testing... Open http://localhost:8097/ to see test result.')
                     # vis.images(output_np[:, None, :, :], win='test_pred', opts=dict(title='test prediction'))
                     # vis.images(bag_msk_np[:, None, :, :], win='test_label', opts=dict(title='label'))
@@ -114,20 +118,21 @@ def train(num_epochs=50, show_vgg_params=False, data_dir=''):
         time_str = "Time %02d:%02d:%02d" % (h, m, s)
         prev_time = cur_time
 
-        print('epoch train loss = %f, epoch test loss = %f, %s'
+        print('epoch train loss: %.4f, epoch test loss: %.4f, %s'
               % (train_loss / len(train_dataloader), test_loss / len(test_dataloader), time_str))
 
-        if np.mod(epo, 5) == 0:
-            torch.save(fcn_model, 'checkpoints/fcn_model_{}.pt'.format(epo))
-            print('saveing checkpoints/fcn_model_{}.pt'.format(epo))
+        if np.mod(epoch, 5) == 0:
+            torch.save(fcn_model, 'checkpoints/fcn_model_{}.pt'.format(epoch))
+            print('saveing checkpoints/fcn_model_{}.pt'.format(epoch))
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_dir', type=str, default='./dataset/bag/', help='path for load data')
+    parser.add_argument('--model_save_dir', type=str, default='./checkpoints/', help='path for save model')
     parser.add_argument('--num_epochs', type=int, default=50)
     parser.add_argument('--show_vgg_params', type=bool, default=False)
     args = parser.parse_args()
     print(args)
 
-    train(args.num_epochs, args.show_vgg_params, args.data_dir)
+    train(args.num_epochs, args.show_vgg_params, args.data_dir, args.model_save_dir)

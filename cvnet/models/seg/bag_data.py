@@ -46,6 +46,7 @@ def onehot(data, n):
     buf.ravel()[nmsk - 1] = 1
     return buf
 
+
 def load_data(data_dir):
     transform = transforms.Compose([
         transforms.ToTensor(),
