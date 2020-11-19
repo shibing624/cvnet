@@ -39,8 +39,10 @@ class CocoDataset(data.Dataset):
         caption = coco.anns[ann_id]['caption']
         img_id = coco.anns[ann_id]['image_id']
         path = coco.loadImgs(img_id)[0]['file_name']
-
-        image = Image.open(os.path.join(self.root, path)).convert('RGB')
+        img_file = os.path.join(self.root, path)
+        if not os.path.exists(img_file):
+            raise ValueError("file not found")
+        image = Image.open(img_file).convert('RGB')
         if self.transform is not None:
             image = self.transform(image)
 

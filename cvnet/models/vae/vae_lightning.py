@@ -32,7 +32,7 @@ if __name__ == "__main__":
     parser = pl.Trainer.add_argparse_args(parser)
     args = parser.parse_args()
     args.data_dir = os.path.expanduser(os.path.join("~", ".pytorch/datasets/CIFAR10"))
-    args.epochs = 100
+    args.max_epochs = 10
     if torch.cuda.is_available():
         args.gpus = 4
     dm = dm_cls.from_argparse_args(args)

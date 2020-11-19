@@ -40,6 +40,7 @@ def main(args):
                              (0.229, 0.224, 0.225))])
 
     # Load vocabulary wrapper
+    vocabulary = Vocabulary()
     with open(args.vocab_path, 'rb') as f:
         vocab = pickle.load(f)
 
