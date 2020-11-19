@@ -26,7 +26,16 @@ python train.py --image_dir ./data/resized2017 --caption_path /home/users/xuming
 ### Test
 
 ```shell
-python sample.py --image="../../dataset/png/animal.png"
+python sample.py --image="../../dataset/png/animals.png"
 
 ```
 
+animals.png:
+
+[animal.png](../../dataset/png/animals.png)
+
+my predict result:
+```
+<start> a group of giraffes standing around in a field . <end>
+
+```
