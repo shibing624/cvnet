@@ -74,11 +74,17 @@ def convrelu(in_channels, out_channels, kernel, padding):
 
 
 class ResNetUNet(nn.Module):
-    def __init__(self, n_class):
+    def __init__(self, n_class, requires_grad=False):
         super().__init__()
 
         self.base_model = models.resnet18(pretrained=True)
         self.base_layers = list(self.base_model.children())
+
+        if not requires_grad:
+            # freeze backbone layers
+            for l in self.base_layers:
+                for param in l.parameters():
+                    param.requires_grad = False
 
         self.layer0 = nn.Sequential(*self.base_layers[:3])  # size=(N, 64, x.H/2, x.W/2)
         self.layer0_1x1 = convrelu(64, 64, 1, 0)
@@ -143,7 +149,8 @@ class ResNetUNet(nn.Module):
 
         return out
 
-    def calc_loss(self, pred, target, metrics, bce_weight=0.5):
+    @staticmethod
+    def calc_loss(pred, target, metrics, bce_weight=0.5):
         bce = F.binary_cross_entropy_with_logits(pred, target)
 
         pred = torch.sigmoid(pred)

@@ -151,7 +151,8 @@ class FCNs(nn.Module):
 
         return score
 
-    def calc_loss(self, pred, target, metrics):
+    @staticmethod
+    def calc_loss(pred, target, metrics):
         criterion = nn.BCELoss()
 
         pred = torch.sigmoid(pred)
