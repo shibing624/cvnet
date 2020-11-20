@@ -17,10 +17,10 @@ def plot_img_array(img_array, ncol=3):
     f, plots = plt.subplots(nrow, ncol, sharex='all', sharey='all', figsize=(ncol * 4, nrow * 4))
 
     for i in range(len(img_array)):
-        # plots[i // ncol, i % ncol]
+        plots[i // ncol, i % ncol]
         plots[i // ncol, i % ncol].imshow(img_array[i])
-        plt.pause(1)
-        plt.savefig("1.png")
+        # plt.pause(1)
+        # plt.savefig("1.png")
 
 
 def plot_side_by_side(img_arrays):
