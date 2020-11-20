@@ -8,7 +8,7 @@ import sys
 import numpy as np
 import torch
 import torch.nn as nn
-import torch.optim as optim
+from torch import optim
 from torch.optim import lr_scheduler
 import time
 import copy
@@ -19,8 +19,6 @@ from cvnet.models.seg.unet.helper import masks_to_colorimg, plot_side_by_side
 from cvnet.models.seg.unet.generate_data import generate_random_data
 
 
-
-
 def find_last_layer(layer):
     children = list(layer.children())
     if len(children) == 0:
@@ -28,37 +26,12 @@ def find_last_layer(layer):
     else:
         return find_last_layer(children[-1])
 
-# Generate some random images
-input_images, target_masks = generate_random_data(192, 192, count=3)
-
-print(input_images.shape, target_masks.shape)
-
-# Change channel-order and make 3 channels for matplot
-input_images_rgb = [(x.swapaxes(0, 2).swapaxes(0,1) * -255 + 255).astype(np.uint8) for x in input_images]
-
-# Map each channel (i.e. class) to each color
-target_masks_rgb = [masks_to_colorimg(x) for x in target_masks]
-
-# Left: Input image, Right: Target mask
-plot_side_by_side([input_images_rgb, target_masks_rgb])
-
-
-base_model = models.resnet18(pretrained=True)
-print(list(base_model.children()))
-
-model_wo_avgpool = nn.Sequential(*list(base_model.children())[:-2])
-
-#OrderedDict(model_wo_avgpool.named_children())
-
-
-
 class FCN(nn.Module):
     def __init__(self, n_class):
         super().__init__()
 
         self.base_model = models.resnet18(pretrained=True)
-
-        layers = list(base_model.children())
+        layers = list(self.base_model.children())
         self.layer1 = nn.Sequential(*layers[:5])  # size=(N, 64, x.H/2, x.W/2)
         self.upsample1 = nn.Upsample(scale_factor=4, mode='bilinear')
         self.layer2 = layers[5]  # size=(N, 128, x.H/4, x.W/4)
@@ -88,7 +61,7 @@ class FCN(nn.Module):
         return out
 
 
-fcn_model = FCN(6)
+
 def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
     since = time.time()
 
@@ -102,7 +75,6 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
         # Each epoch has a training and validation phase
         for phase in ['train', 'val']:
             if phase == 'train':
-                scheduler.step()
                 model.train()  # Set model to training mode
             else:
                 model.eval()   # Set model to evaluate mode
@@ -114,7 +86,7 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             batch_size = 10
             epoch_steps = 10
             for i in range(epoch_steps):
-                input_images, target_masks = simulation.generate_random_data(192, 192, count=batch_size)
+                input_images, target_masks = generate_random_data(192, 192, count=batch_size)
 
                 inputs = torch.from_numpy(input_images)
                 labels = torch.from_numpy(target_masks)
@@ -134,12 +106,10 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
                     if phase == 'train':
                         loss.backward()
                         optimizer.step()
-
+                        scheduler.step()
                 # statistics
                 running_loss += loss.item() * inputs.size(0)
-
             epoch_loss = running_loss / (batch_size * epoch_steps)
-
             print('{} Loss: {:.4f}'.format(
                 phase, epoch_loss))
 
@@ -147,8 +117,6 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
             if phase == 'val' and epoch_loss < best_loss:
                 best_loss = epoch_loss
                 best_model_wts = copy.deepcopy(model.state_dict())
-
-        print()
 
     time_elapsed = time.time() - since
     print('Training complete in {:.0f}m {:.0f}s'.format(
@@ -161,11 +129,18 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 
 
 if __name__ == '__main__':
+    # Generate some random images
+    input_images, target_masks = generate_random_data(192, 192, count=3)
+    print(input_images.shape, target_masks.shape)
 
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
+    # Change channel-order and make 3 channels for matplot
+    input_images_rgb = [(x.swapaxes(0, 2).swapaxes(0, 1) * -255 + 255).astype(np.uint8) for x in input_images]
+    # Map each channel (i.e. class) to each color
+    target_masks_rgb = [masks_to_colorimg(x) for x in target_masks]
+    # Left: Input image, Right: Target mask
+    plot_side_by_side([input_images_rgb, target_masks_rgb])
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model_ft = FCN(6).to(device)
-
     criterion = nn.BCELoss()
 
     # Observe that all parameters are being optimized
