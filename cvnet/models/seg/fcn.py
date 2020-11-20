@@ -3,6 +3,7 @@
 @author:XuMing(xuming624@qq.com)
 @description: 
 """
+import torch
 import torch.nn as nn
 from torchvision import models
 from torchvision.models.vgg import VGG
@@ -149,6 +150,14 @@ class FCNs(nn.Module):
         score = self.classifier(score)
 
         return score
+
+    def calc_loss(self, pred, target, metrics):
+        criterion = nn.BCELoss()
+
+        pred = torch.sigmoid(pred)
+        loss = criterion(pred, target)
+        metrics['loss'] += loss.data.cpu().numpy() * target.size(0)
+        return loss
 
 
 class VGGNet(VGG):

@@ -3,6 +3,7 @@
 @author:XuMing(xuming624@qq.com)
 @description: 
 """
+
 import argparse
 import os
 import sys
@@ -13,12 +14,15 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-
+import torch.nn.functional as F
+from torch.optim import lr_scheduler
 import time
-sys.path.append('../../..')
+
+# sys.path.append('../../..')
 from cvnet.models.seg.bag_data import load_data
-from cvnet.models.seg.unet import ResNetUNet, calc_loss, print_metrics
+from cvnet.models.seg.unet import ResNetUNet
 from cvnet.models.seg import helper
+from cvnet.models.seg.fcn import FCNs, VGGNet
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -34,10 +38,14 @@ def reverse_transform(inp):
     return inp
 
 
-def train_model(model, dataloaders, optimizer, scheduler,num_epochs=50, model_path=''):
+def print_metrics(metrics, epoch_samples, phase):
+    outputs = []
+    for k in metrics.keys():
+        outputs.append("{}: {:4f}".format(k, metrics[k] / epoch_samples))
 
-    all_train_iter_loss = []
-    all_test_iter_loss = []
+    print("{}: {}".format(phase, ", ".join(outputs)))
+
+def train_model(model, dataloaders, optimizer, scheduler, num_epochs=50, model_path=''):
     best_loss = 1e10
     # start train
     prev_time = datetime.now()
@@ -65,28 +73,12 @@ def train_model(model, dataloaders, optimizer, scheduler,num_epochs=50, model_pa
                 # track history if only in train
                 with torch.set_grad_enabled(phase == 'train'):
                     outputs = model(inputs)
-                    loss = calc_loss(outputs, labels, metrics)
+                    loss = model.calc_loss(outputs, labels, metrics)
 
                     # backward + optimize only if in training phase
                     if phase == 'train':
                         loss.backward()
                         optimizer.step()
-
-                    if phase == 'val':
-                        pred = model(inputs)
-                        pred = torch.sigmoid(pred)
-                        pred = pred.data.cpu().numpy()
-                        print(pred.shape)
-
-                        # Change channel-order and make 3 channels for matplot
-                        input_images_rgb = [reverse_transform(x) for x in inputs.cpu()]
-
-                        # Map each channel (i.e. class) to each color
-                        target_masks_rgb = [helper.masks_to_colorimg_binary(x) for x in labels.cpu().numpy()]
-                        pred_rgb = [helper.masks_to_colorimg_binary(x) for x in pred]
-
-                        helper.plot_side_by_side([input_images_rgb, target_masks_rgb, pred_rgb])
-
                 # statistics
                 epoch_samples += inputs.size(0)
 
@@ -101,12 +93,26 @@ def train_model(model, dataloaders, optimizer, scheduler,num_epochs=50, model_pa
             # save the model weights
             if phase == 'val' and epoch_loss < best_loss:
                 best_loss = epoch_loss
-                torch.save(model.state_dict(), '{}/model_{}.pt'.format(model_save_dir, epoch))
-                print('save to {}/model_{}.pt'.format(model_save_dir, epoch))
+                torch.save(model.state_dict(), model_path)
+                print('save best model to {}'.format(model_path))
 
+                # plot image
+                pred = model(inputs)
+                pred = torch.sigmoid(pred)
+                pred = pred.data.cpu().numpy()
+                print(pred.shape)
+
+                # Change channel-order and make 3 channels for matplot
+                input_images_rgb = [reverse_transform(x) for x in inputs.cpu()]
+
+                # Map each channel (i.e. class) to each color
+                target_masks_rgb = [helper.masks_to_colorimg_binary(x) for x in labels.cpu().numpy()]
+                pred_rgb = [helper.masks_to_colorimg_binary(x) for x in pred]
+
+                helper.plot_side_by_side([input_images_rgb, target_masks_rgb, pred_rgb])
 
         time_elapsed = time.time() - since
-        print('spend: {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))
+        print('Epoch: {}, spend: {:.0f}m {:.0f}s'.format(epoch, time_elapsed // 60, time_elapsed % 60))
 
     print('Best val loss: {:4f}'.format(best_loss))
     # load best model weights
@@ -116,9 +122,10 @@ def train_model(model, dataloaders, optimizer, scheduler,num_epochs=50, model_pa
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument('--arch', type=str, default='unet', help='unet/fcn')
     parser.add_argument('--data_dir', type=str, default='./dataset/bag/', help='path for load data')
     parser.add_argument('--model_path', type=str, default='./checkpoints/best_model.pth', help='path for save model')
-    parser.add_argument('--num_epochs', type=int, default=5)
+    parser.add_argument('--num_epochs', type=int, default=2)
     args = parser.parse_args()
     print(args)
 
@@ -132,9 +139,16 @@ if __name__ == "__main__":
 
     plt.imshow(reverse_transform(inputs[0]))
 
-
     n_class = 2
-    model = ResNetUNet(n_class=n_class)
+    if args.arch == 'unet':
+        model = ResNetUNet(n_class=n_class)
+    elif args.arch == 'fcn':
+        vgg_model = VGGNet(requires_grad=True, show_params=False)
+        model = FCNs(pretrained_net=vgg_model, n_class=n_class)
+    else:
+        model = None
+        raise ValueError("model not impl: {}".format(args.arch))
+    model = model.to(device)
     model_save_dir = os.path.dirname(args.model_path)
     if not os.path.exists(model_save_dir):
         os.makedirs(model_save_dir)
@@ -147,4 +161,4 @@ if __name__ == "__main__":
     optimizer_ft = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=1e-4)
 
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=8, gamma=0.1)
-    train_model(model,dataloaders, optimizer_ft, exp_lr_scheduler,  args.num_epochs, args.model_path)
+    train_model(model, dataloaders, optimizer_ft, exp_lr_scheduler,  args.num_epochs, args.model_path)

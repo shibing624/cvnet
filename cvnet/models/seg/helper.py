@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_img_array(img_array, ncol=3):
+def plot_img_array(img_array, ncol=3, epoch=0):
     nrow = len(img_array) // ncol
 
     f, plots = plt.subplots(nrow, ncol, sharex='all', sharey='all', figsize=(ncol * 4, nrow * 4))
@@ -20,13 +20,13 @@ def plot_img_array(img_array, ncol=3):
         plots[i // ncol, i % ncol]
         plots[i // ncol, i % ncol].imshow(img_array[i])
         # plt.pause(1)
-        # plt.savefig("1.png")
+        plt.savefig("{}.png".format(epoch))
 
 
-def plot_side_by_side(img_arrays):
+def plot_side_by_side(img_arrays, epoch):
     flatten_list = reduce(lambda x, y: x + y, zip(*img_arrays))
 
-    plot_img_array(np.array(flatten_list), ncol=len(img_arrays))
+    plot_img_array(np.array(flatten_list), ncol=len(img_arrays), epoch=epoch)
 
 
 def plot_errors(results_dict, title):
@@ -57,6 +57,7 @@ def masks_to_colorimg_binary(masks):
                 colorimg[y, x, :] = np.mean(selected_colors, axis=0)
 
     return colorimg.astype(np.uint8)
+
 
 def masks_to_colorimg(masks):
     colors = np.asarray([(201, 58, 64), (242, 207, 1), (0, 152, 75), (101, 172, 228), (56, 34, 132), (160, 194, 56)])
