@@ -20,7 +20,7 @@
 ## 1.如何运行
 
 
-* 打开另一终端，输入
+* 打开终端，输入
 ```sh
 python fcn_train.py --data_dir="/home/users/xuming06/workspace/cv/DataSet/bag"
 ```

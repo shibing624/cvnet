@@ -76,7 +76,7 @@ def train(num_epochs=50, show_vgg_params=False, data_dir='', model_save_dir='./c
                 plt.subplot(1, 2, 2)
                 plt.imshow(np.squeeze(output_np[0, ...]), 'gray')
                 plt.pause(0.5)
-                plt.savefig('train_{}.png'.format(index))
+                plt.savefig('train_{}_{}.png'.format(epoch, index))
 
         test_loss = 0.
         fcn_model.eval()
@@ -110,7 +110,7 @@ def train(num_epochs=50, show_vgg_params=False, data_dir='', model_save_dir='./c
                     plt.subplot(1, 2, 2)
                     plt.imshow(np.squeeze(output_np[0, ...]), 'gray')
                     plt.pause(0.5)
-                    plt.savefig('test_{}.png'.format(index))
+                    plt.savefig('test_{}_{}.png'.format(epoch,index))
 
         cur_time = datetime.now()
         h, remainder = divmod((cur_time - prev_time).seconds, 3600)
