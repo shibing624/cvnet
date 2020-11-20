@@ -15,7 +15,7 @@ import torch.nn as nn
 import torch.optim as optim
 
 import time
-# sys.path.append('../../..')
+sys.path.append('../../..')
 from cvnet.models.seg.bag_data import load_data
 from cvnet.models.seg.unet import ResNetUNet, calc_loss, print_metrics
 from cvnet.models.seg import helper
@@ -82,8 +82,8 @@ def train_model(model, dataloaders, optimizer, scheduler,num_epochs=50, model_pa
                         input_images_rgb = [reverse_transform(x) for x in inputs.cpu()]
 
                         # Map each channel (i.e. class) to each color
-                        target_masks_rgb = [helper.masks_to_colorimg(x) for x in labels.cpu().numpy()]
-                        pred_rgb = [helper.masks_to_colorimg(x) for x in pred]
+                        target_masks_rgb = [helper.masks_to_colorimg_binary(x) for x in labels.cpu().numpy()]
+                        pred_rgb = [helper.masks_to_colorimg_binary(x) for x in pred]
 
                         helper.plot_side_by_side([input_images_rgb, target_masks_rgb, pred_rgb])
 
