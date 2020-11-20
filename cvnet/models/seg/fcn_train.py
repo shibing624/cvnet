@@ -14,7 +14,6 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
-# import visdom
 
 sys.path.append('../../..')
 from cvnet.models.seg.bag_data import load_data
@@ -28,7 +27,6 @@ def train(num_epochs=50, show_vgg_params=False, data_dir='', model_save_dir='./c
     if not os.path.exists(model_save_dir):
         os.makedirs(model_save_dir)
 
-    # vis = visdom.Visdom()
     vgg_model = VGGNet(requires_grad=True, show_params=show_vgg_params)
     fcn_model = FCNs(pretrained_net=vgg_model, n_class=2)
     fcn_model = fcn_model.to(device)
@@ -67,9 +65,6 @@ def train(num_epochs=50, show_vgg_params=False, data_dir='', model_save_dir='./c
 
             if np.mod(index, 15) == 0:
                 print('epoch: {}, iter: {}/{}, train loss: {}'.format(epoch, index, len(train_dataloader), iter_loss))
-                # vis.images(output_np[:, None, :, :], win='train_pred', opts=dict(title='train prediction'))
-                # vis.images(bag_msk_np[:, None, :, :], win='train_label', opts=dict(title='label'))
-                # vis.line(all_train_iter_loss, win='train_iter_loss', opts=dict(title='train iter loss'))
 
                 plt.subplot(1, 2, 1)
                 plt.imshow(np.squeeze(bag_msk_np[0, ...]), 'gray')
@@ -100,10 +95,6 @@ def train(num_epochs=50, show_vgg_params=False, data_dir='', model_save_dir='./c
                 bag_msk_np = np.argmin(bag_msk_np, axis=1)
 
                 if np.mod(index, 5) == 0:
-                    # print(r'Testing... Open http://localhost:8097/ to see test result.')
-                    # vis.images(output_np[:, None, :, :], win='test_pred', opts=dict(title='test prediction'))
-                    # vis.images(bag_msk_np[:, None, :, :], win='test_label', opts=dict(title='label'))
-                    # vis.line(all_test_iter_loss, win='test_iter_loss', opts=dict(title='test iter loss'))
 
                     plt.subplot(1, 2, 1)
                     plt.imshow(np.squeeze(bag_msk_np[0, ...]), 'gray')

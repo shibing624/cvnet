@@ -47,10 +47,10 @@ def onehot(data, n):
     return buf
 
 
-def load_data(data_dir):
+def load_data(data_dir, batch_size=10):
     transform = transforms.Compose([
         transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])]) # imagenet params
 
     bag = BagDataset(transform, data_dir)
 
@@ -58,6 +58,10 @@ def load_data(data_dir):
     test_size = len(bag) - train_size
     train_dataset, test_dataset = random_split(bag, [train_size, test_size])
 
-    train_dataloader = DataLoader(train_dataset, batch_size=4, shuffle=True, num_workers=4)
-    test_dataloader = DataLoader(test_dataset, batch_size=4, shuffle=True, num_workers=4)
-    return train_dataloader, test_dataloader
+    train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
+    test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=True, num_workers=4)
+    dataloaders = {
+        'train': train_dataloader,
+        'val': test_dataloader
+    }
+    return dataloaders
