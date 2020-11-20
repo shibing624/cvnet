@@ -40,7 +40,7 @@ def print_metrics(epoch, metrics, epoch_samples, phase):
     for k in metrics.keys():
         outputs.append("{}: {:4f}".format(k, metrics[k] / epoch_samples))
 
-    print("Epoch:{}, {}: {}".format(epoch, phase, ", ".join(outputs)))
+    print("Epoch:{}, phase: {}, {}".format(epoch, phase, ", ".join(outputs)))
 
 def train_model(model, dataloaders, optimizer, scheduler, device, num_epochs=50, model_path=''):
     best_loss = 1e10
