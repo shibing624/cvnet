@@ -42,14 +42,11 @@ def print_metrics(epoch, metrics, epoch_samples, phase):
 
     print("Epoch:{}, {}: {}".format(epoch, phase, ", ".join(outputs)))
 
-def train_model(model, dataloaders, optimizer, scheduler, num_epochs=50, model_path=''):
+def train_model(model, dataloaders, optimizer, scheduler, device, num_epochs=50, model_path=''):
     best_loss = 1e10
     # start train
     prev_time = datetime.now()
     for epoch in range(num_epochs):
-        print('Epoch {}/{}'.format(epoch, num_epochs - 1))
-        print('-' * 10)
-
         since = time.time()
         train_loss = 0.
         # Each epoch has a training and validation phase
@@ -152,7 +149,7 @@ def main():
     optimizer_ft = optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=1e-4)
 
     exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=8, gamma=0.1)
-    train_model(model, dataloaders, optimizer_ft, exp_lr_scheduler, args.num_epochs, args.model_path)
+    train_model(model, dataloaders, optimizer_ft, exp_lr_scheduler, device, args.num_epochs, args.model_path)
 
 
 if __name__ == "__main__":
