@@ -8,14 +8,12 @@ import argparse
 import os
 import sys
 import time
-from datetime import datetime
 from collections import defaultdict
+
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
-import torch.nn as nn
 import torch.optim as optim
-import torch.nn.functional as F
 from torch.optim import lr_scheduler
 
 sys.path.append('../../..')
@@ -23,6 +21,7 @@ from cvnet.models.seg.bag_data import load_data
 from cvnet.models.seg.unet import ResNetUNet
 from cvnet.models.seg import helper
 from cvnet.models.seg.fcn import FCNs, VGGNet
+
 
 def reverse_transform(inp):
     inp = inp.numpy().transpose((1, 2, 0))
@@ -42,13 +41,12 @@ def print_metrics(epoch, metrics, epoch_samples, phase):
 
     print("Epoch:{}, phase: {}, {}".format(epoch, phase, ", ".join(outputs)))
 
+
 def train_model(model, dataloaders, optimizer, scheduler, device, num_epochs=50, model_path=''):
     best_loss = 1e10
     # start train
-    prev_time = datetime.now()
     for epoch in range(num_epochs):
         since = time.time()
-        train_loss = 0.
         # Each epoch has a training and validation phase
         for phase in ['train', 'val']:
             if phase == 'train':
@@ -91,7 +89,7 @@ def train_model(model, dataloaders, optimizer, scheduler, device, num_epochs=50,
             if phase == 'val' and epoch_loss < best_loss:
                 best_loss = epoch_loss
                 torch.save(model.state_dict(), model_path)
-                print('save best model: {}'.format(model_path))
+                print('Best val loss: {:4f}, save best model: {}'.format(best_loss, model_path))
 
                 # Plot image
                 pred = model(inputs)
@@ -106,12 +104,12 @@ def train_model(model, dataloaders, optimizer, scheduler, device, num_epochs=50,
                 helper.plot_side_by_side([input_images_rgb, target_masks_rgb, pred_rgb], epoch)
 
         time_elapsed = time.time() - since
-        print('Epoch: {}, spend: {:.0f}m {:.0f}s'.format(epoch, time_elapsed // 60, time_elapsed % 60))
+        print('Epoch: {}/{}, spend: {:.0f}m {:.0f}s'.format(epoch, num_epochs, time_elapsed // 60, time_elapsed % 60))
 
-    print('Best val loss: {:4f}'.format(best_loss))
     # load best model weights
     model.load_state_dict(torch.load(model_path))
     return model
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -131,7 +129,9 @@ def main():
     for x in [inputs.numpy(), masks.numpy()]:
         print(x.min(), x.max(), x.mean(), x.std())
     # Show train sample
-    plt.imshow(reverse_transform(inputs[0]))
+    sample_img = reverse_transform(inputs[0])
+    plt.imshow(sample_img)
+    plt.savefig('sample.png')
 
     n_class = 2
     if args.arch == 'unet':

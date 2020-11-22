@@ -1,4 +1,5 @@
-# pytorch FCN easiest demo
+# pytorch FCN/UNet easiest demo
+
 
 
 这个repo是在读论文[Fully Convolutional Networks for Semantic Segmentation](http://arxiv.org/abs/1411.4038)时的一个pytorch简单复现，数据集很小，是一些随机背景上的一些包的图片（所有数据集大小一共不到80M），如下图
@@ -51,3 +52,7 @@ python fcn_train.py --data_dir="/home/users/xuming06/workspace/cv/DataSet/bag"
 
 * 定义方便PyTorch读取数据的Dataset和DataLoader
 * 定义数据的变换transform
+
+## Reference
+
+[FCN/UNet原理解析（知乎）](https://zhuanlan.zhihu.com/p/31428783)
