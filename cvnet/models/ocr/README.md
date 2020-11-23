@@ -19,32 +19,41 @@ OCR，光学字符识别（Optical Character Recognition），指对图像中的
 ### 技术难点
 
 - 复杂版式（如：表格文本、目录文本、横版文本、竖版文本）
-![table](../../../docs/ocr/table_words.png)
+
+<img src="../../../docs/ocr/table_words.png" width="200" />
+
 - 扭曲变形（如：书本翻页、纸张褶皱）
-![book](../../../docs/ocr/niuqu.png)
+
+<img src="../../../docs/ocr/niuqu.png" width="200" />
+
 - 笔迹干扰、手写、涂改（如：答卷）
-![handle_write](../../../docs/ocr/hand_write.png)
+
+<img src="../../../docs/ocr/hand_write.png" width="200" />
+
 - 不均匀光照、反光、弱光
-![fanguang](../../../docs/ocr/fanguang.png)
+
+<img src="../../../docs/ocr/fanguang.png" width="200" />
+
 - 失焦、运动模糊、摩尔纹
-![moer](../../../docs/ocr/moer.png)
+
+<img src="../../../docs/ocr/moer.png" width="200" />
+
 - 复杂背景
-![bg](../../../docs/ocr/complex_bg.png)
+
+<img src="../../../docs/ocr/complex_bg.png" width="200" />
+
 - 多字体、多语言混排
-![fonts](../../../docs/ocr/fonts_words.png)
+
+<img src="../../../docs/ocr/fonts_words.png" width="200" />
+
 - 角度、弯曲、变形
-![angle](../../../docs/ocr/angle.png)
+
+<img src="../../../docs/ocr/angle.png" width="200" />
+
 
 
 ## OCR实现流程
 
 CRNN
 - CTC
-
-
-- 通用文本识别
-
-
-- 车牌检测和识别
-
 
