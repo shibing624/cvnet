@@ -11,7 +11,7 @@ import torch
 sys.path.append("..")
 
 from cvnet.engine import trainer
-from cvnet.models.resnet import net
+from cvnet.models.cls.resnet import net
 from cvnet.dataset import cifar
 
 

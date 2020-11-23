@@ -12,10 +12,10 @@ import sys
 import torch
 from torch import nn
 
-sys.path.append("../..")
+sys.path.append("../../..")
 from cvnet.dataset import fashion_mnist
 from cvnet.engine import trainer
-from cvnet.models.custom_layer import GlobalAvgPool2d, FlattenLayer
+from cvnet.models.cls.custom_layer import GlobalAvgPool2d, FlattenLayer
 
 
 # DenseNet使用了ResNet改良版的“批量归一化、激活和卷积”结构

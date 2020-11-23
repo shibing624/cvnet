@@ -11,11 +11,11 @@ import sys
 import torch
 from torch import nn
 
-sys.path.append("../..")
+sys.path.append("../../..")
 from cvnet.dataset import fashion_mnist
 from cvnet.engine import trainer
 
-from cvnet.models.custom_layer import FlattenLayer
+from cvnet.models.cls.custom_layer import FlattenLayer
 
 
 def vgg_block(num_convs, in_channels, out_channels):

@@ -13,7 +13,7 @@ import sys
 import torch
 from torch import nn
 
-sys.path.append("../..")
+sys.path.append("../../..")
 from cvnet.dataset import fashion_mnist
 from cvnet.engine import trainer
 

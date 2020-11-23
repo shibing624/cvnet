@@ -3,7 +3,7 @@
 @author:XuMing(xuming624@qq.com)
 @description: NiN model
 
-NiN重复使用由卷积层和代替全连接层的1×11×1卷积层构成的NiN块来构建深层网络。
+NiN重复使用由卷积层和代替全连接层的1×1卷积层构成的NiN块来构建深层网络。
 NiN去除了容易造成过拟合的全连接输出层，而是将其替换成输出通道数等于标签类别数的NiN块和全局平均池化层。
 NiN的以上设计思想影响了后面一系列卷积神经网络的设计。
 """
@@ -13,10 +13,10 @@ import sys
 import torch
 from torch import nn
 
-sys.path.append("../..")
+sys.path.append("../../..")
 from cvnet.dataset import fashion_mnist
 from cvnet.engine import trainer
-from cvnet.models.custom_layer import FlattenLayer, GlobalAvgPool2d
+from cvnet.models.cls.custom_layer import FlattenLayer, GlobalAvgPool2d
 
 
 def nin_block(in_channels, out_channels, kernel_size, stride, padding):

@@ -14,10 +14,10 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 
-sys.path.append("../..")
+sys.path.append("../../..")
 from cvnet.dataset import fashion_mnist
 from cvnet.engine import trainer
-from cvnet.models.custom_layer import FlattenLayer, GlobalAvgPool2d
+from cvnet.models.cls.custom_layer import FlattenLayer, GlobalAvgPool2d
 
 
 class Inception(nn.Module):
