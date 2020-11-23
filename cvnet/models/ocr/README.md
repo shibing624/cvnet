@@ -27,7 +27,7 @@ OCR，光学字符识别（Optical Character Recognition），指对图像中的
 | 失焦、运动模糊、摩尔纹 | 运动照片 | <img src="../../../docs/ocr/moer.png" width="400" /> |
 | 复杂背景 | 彩色背景 | <img src="../../../docs/ocr/complex_bg.png" width="400" /> |
 | 多字体、多语言混排 | 课本封面 | <img src="../../../docs/ocr/fonts_words.png" width="400" /> |
-| 角度、弯曲、变形 | logo、图章 | <img src="../../../docs/ocr/angle.png" width="400" /> |
+| 角度、弯曲、变形 | logo、图章 | <img src="../../../docs/ocr/angles.png" width="400" /> |
 
 
 
