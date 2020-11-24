@@ -118,8 +118,8 @@ def main(config):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--content', type=str, default='../dataset/png/content.png')
-    parser.add_argument('--style', type=str, default='../dataset/png/style.png')
+    parser.add_argument('--content', type=str, default='../../dataset/png/content.png')
+    parser.add_argument('--style', type=str, default='../../dataset/png/style.png')
     parser.add_argument('--max_size', type=int, default=400)
     parser.add_argument('--total_step', type=int, default=2000)
     parser.add_argument('--log_step', type=int, default=10)
