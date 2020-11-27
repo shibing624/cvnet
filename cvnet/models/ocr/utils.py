@@ -108,13 +108,13 @@ class CTCLabelConverterForBaiduWarpctc(object):
 class AttnLabelConverter(object):
     """ Convert between text-label and text-index """
 
-    def __init__(self, character):
+    def __init__(self, character, device='cuda'):
         # character (str): set of the possible characters.
         # [GO] for the start token of the attention decoder. [s] for end-of-sentence token.
         list_token = ['[GO]', '[s]']  # ['[s]','[UNK]','[PAD]','[GO]']
         list_character = list(character)
         self.character = list_token + list_character
-
+        self.device = device
         self.dict = {}
         for i, char in enumerate(self.character):
             # print(i, char)

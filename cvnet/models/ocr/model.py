@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
-
+import torch
 import torch.nn as nn
 
 from cvnet.models.ocr.layers.attn import Attention
@@ -22,6 +22,8 @@ from cvnet.models.ocr.layers.feature_extraction import VGG_FeatureExtractor, RCN
     ResNet_FeatureExtractor
 from cvnet.models.ocr.layers.transformer import TPS_SpatialTransformerNetwork
 
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 class Model(nn.Module):
     def __init__(self, opt):
@@ -34,7 +36,7 @@ class Model(nn.Module):
         if opt.Transformation == 'TPS':
             self.Transformation = TPS_SpatialTransformerNetwork(
                 F=opt.num_fiducial, I_size=(opt.imgH, opt.imgW), I_r_size=(opt.imgH, opt.imgW),
-                I_channel_num=opt.input_channel, device=opt.device)
+                I_channel_num=opt.input_channel, device=device)
         else:
             print('No Transformation module specified')
 
@@ -64,7 +66,7 @@ class Model(nn.Module):
         if opt.Prediction == 'CTC':
             self.Prediction = nn.Linear(self.SequenceModeling_output, opt.num_class)
         elif opt.Prediction == 'Attn':
-            self.Prediction = Attention(self.SequenceModeling_output, opt.hidden_size, opt.num_class, device=opt.device)
+            self.Prediction = Attention(self.SequenceModeling_output, opt.hidden_size, opt.num_class, device=device)
         else:
             raise Exception('Prediction is neither CTC or Attn')
 

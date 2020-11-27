@@ -16,13 +16,12 @@ sys.path.append('../../..')
 from cvnet.models.ocr.utils import CTCLabelConverter, AttnLabelConverter
 from cvnet.models.ocr.dataset import RawDataset, AlignCollate
 from cvnet.models.ocr.model import Model
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
 def demo(opt):
     """ model configuration """
-    device = torch.device('cuda' if torch.cuda.is_available() and opt.device == 'cuda' else 'cpu')
     print('device:', device)
-    opt.device = device
     if 'CTC' in opt.Prediction:
         converter = CTCLabelConverter(opt.character, device=device)
     else:
@@ -124,7 +123,6 @@ if __name__ == '__main__':
     parser.add_argument('--output_channel', type=int, default=512,
                         help='the number of output channel of Feature extractor')
     parser.add_argument('--hidden_size', type=int, default=256, help='the size of the LSTM hidden state')
-    parser.add_argument('--device', type=str, default='cuda', help='cpu/cuda')
 
     opt = parser.parse_args()
 

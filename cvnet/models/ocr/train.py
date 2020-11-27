@@ -56,9 +56,9 @@ def train(opt):
         if opt.baiduCTC:
             converter = CTCLabelConverterForBaiduWarpctc(opt.character)
         else:
-            converter = CTCLabelConverter(opt.character)
+            converter = CTCLabelConverter(opt.character, device=device)
     else:
-        converter = AttnLabelConverter(opt.character)
+        converter = AttnLabelConverter(opt.character, device=device)
     opt.num_class = len(converter.character)
 
     if opt.rgb:
