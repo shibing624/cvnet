@@ -67,15 +67,23 @@ OCR，光学字符识别（Optical Character Recognition），指对图像中的
 对长句子识别比较差。
 2. 从训练和预测速度上，Attention的串行解码结构限制了预测速度，而CTC网络结构更高效，预测速度上更有优势。
 
+## Future
+
+目前来看，深度学习时代之下的场景文字检测与识别技术依然存在巨大挑战，其主要体现在以下 3 个方面：1）文字的差异性，存在着语言、字体、方向、
+排列等各种各样的形态；2）背景的复杂性，比如几乎无法区分的元素（标志、篱笆、墙砖、草地等）；3）干扰的多样性，诸如噪声、模糊、失真、低分辨率、光照不均匀、部分遮挡等情况。
+
+
+相应而言，针对上述挑战，文字检测与识别具体研究有着以下 4 个技术趋势：1）设计更强大的模型；2）识别多方向、弯曲文字；3）识别多语言文字；
+4）合成更丰富逼真的数据集。
 
 
 ## Getting Started
 ### Dependency
 - This work was tested with PyTorch 1.3.1, CUDA 10.1, python 3.6 and Ubuntu 16.04. <br> You may need `pip3 install torch==1.3.1`. <br>
 In the paper, expriments were performed with **PyTorch 0.4.1, CUDA 9.0**.
-- requirements : lmdb, pillow, torchvision, nltk, natsort
+- requirements : lmdb, pillow, torchvision, nltk
 ```
-pip3 install lmdb pillow torchvision nltk natsort
+pip3 install lmdb pillow torchvision nltk
 ```
 
 ### Download lmdb dataset for traininig and evaluation from [here](https://drive.google.com/drive/folders/192UfE9agQUMNq6AgU3_E05_FcPZK4hyt)
@@ -185,4 +193,3 @@ This implementation has been based on these repository [crnn.pytorch](https://gi
 [8] T. Q. Phan, P. Shivakumara, S. Tian, and C. L. Tan. Recognizing text with perspective distortion in natural scenes. In ICCV, pages 569–576, 2013. <br>
 [9] A. Risnumawan, P. Shivakumara, C. S. Chan, and C. L. Tan. A robust arbitrary text detection system for natural scene images. In ESWA, volume 41, pages 8027–8048, 2014. <br>
 [10] B. Shi, X. Bai, and C. Yao. An end-to-end trainable neural network for image-based sequence recognition and its application to scene text recognition. In TPAMI, volume 39, pages2298–2304. 2017.
-
