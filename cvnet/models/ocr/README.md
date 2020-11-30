@@ -156,7 +156,7 @@ image_release.zip contains failure case images and benchmark evaluation images w
 1. Create your own lmdb dataset.
 ```
 pip3 install fire
-python3 create_lmdb_dataset.py --inputPath data/ --gtFile data/gt.txt --outputPath result/
+python3 create_lmdb_dataset.py --input_path data/ --gtFile data/gt.txt --output_path result/
 ```
 The structure of data folder as below.
 ```
