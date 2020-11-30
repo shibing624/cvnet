@@ -179,7 +179,7 @@ def main(args):
     _, styles_Y = net(style_X)
 
     out_array = train(net, content_X, contents_Y, styles_Y, args.lr, args.max_epochs,
-                      args.lr_decay_epoch, args.content_weight, args.style_weight, args.log_epochs)
+                      args.lr_decay_epoch, args.content_weight, args.style_weight, args.tv_weight, args.log_epochs)
     out_img = to_img(out_array)
     out_img.show()
     out_img.save(args.output_img_file)
