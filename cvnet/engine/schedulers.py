@@ -8,6 +8,7 @@ from torch.optim.lr_scheduler import MultiStepLR, ExponentialLR, CosineAnnealing
 from torch.optim.lr_scheduler import _LRScheduler
 from cvnet.utils.logger import logger
 
+
 class ConstantLR(_LRScheduler):
     def __init__(self, optimizer, last_epoch=-1):
         super(ConstantLR, self).__init__(optimizer, last_epoch)

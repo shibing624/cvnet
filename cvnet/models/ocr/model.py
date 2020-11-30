@@ -22,8 +22,8 @@ from cvnet.models.ocr.layers.feature_extraction import VGG_FeatureExtractor, RCN
     ResNet_FeatureExtractor
 from cvnet.models.ocr.layers.transformer import TPS_SpatialTransformerNetwork
 
-
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 
 class Model(nn.Module):
     def __init__(self, opt):

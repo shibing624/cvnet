@@ -3,7 +3,8 @@
 @author:XuMing(xuming624@qq.com)
 @description:
 
-reference: https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/03-advanced/generative_adversarial_network/main.py
+reference: https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/
+03-advanced/generative_adversarial_network/main.py
 """
 
 import os
@@ -70,6 +71,8 @@ def denorm(x):
 # train
 total_step = len(data_loader)
 for epoch in range(num_epochs):
+    images = None
+    fake_images = None
     for i, (images, _) in enumerate(data_loader):
         images = images.reshape(batch_size, -1).to(device)
 
@@ -100,7 +103,7 @@ for epoch in range(num_epochs):
         fake_images = G(z)
         outputs = D(fake_images)
         g_loss = loss_fn(outputs, real_labels)
-        # backprop and optimizer
+        # back prop and optimizer
         d_optimizer.zero_grad()
         g_optimizer.zero_grad()
         g_loss.backward()
