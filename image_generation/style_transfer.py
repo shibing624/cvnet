@@ -166,8 +166,8 @@ def main(args):
     content_img = Image.open(args.content_img_file)
     style_img = Image.open(args.style_img_file)
     image_shape = content_img.size
-    if args.image_max_size < max(content_img.size):
-        scale = args.image_max_size / max(content_img.size)
+    if args.image_max_size < min(content_img.size):
+        scale = args.image_max_size / min(content_img.size)
         image_shape = tuple((np.array(content_img.size) * scale).astype(int))
 
     print("image_shape:", image_shape)
@@ -188,8 +188,8 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--content_img_file', type=str, default='../samples/style_transfer_png/content.png')
-    parser.add_argument('--style_img_file', type=str, default='../samples/style_transfer_png/style.png')
+    parser.add_argument('--content_img_file', type=str, default='../samples/style_transfer_png/mount.png')
+    parser.add_argument('--style_img_file', type=str, default='../samples/style_transfer_png/autumn.png')
     parser.add_argument('--image_max_size', type=int, default=800)
     parser.add_argument('--max_epochs', type=int, default=500)
     parser.add_argument('--log_epochs', type=int, default=20)
