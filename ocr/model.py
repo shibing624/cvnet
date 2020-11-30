@@ -16,11 +16,11 @@ limitations under the License.
 import torch
 import torch.nn as nn
 
-from cvnet.models.ocr.layers.attn import Attention
-from cvnet.models.ocr.layers.bilstm import BidirectionalLSTM
-from cvnet.models.ocr.layers.feature_extraction import VGG_FeatureExtractor, RCNN_FeatureExtractor, \
+from ocr.layers.attn import Attention
+from ocr.layers.bilstm import BidirectionalLSTM
+from ocr.layers.feature_extraction import VGG_FeatureExtractor, RCNN_FeatureExtractor, \
     ResNet_FeatureExtractor
-from cvnet.models.ocr.layers.transformer import TPS_SpatialTransformerNetwork
+from ocr.layers.transformer import TPS_SpatialTransformerNetwork
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

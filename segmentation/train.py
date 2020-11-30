@@ -16,11 +16,11 @@ import torch
 import torch.optim as optim
 from torch.optim import lr_scheduler
 
-sys.path.append('../../..')
-from cvnet.models.seg.bag_data import load_data
-from cvnet.models.seg.unet import ResNetUNet
-from cvnet.models.seg import helper
-from cvnet.models.seg.fcn import FCNs, VGGNet
+sys.path.append('..')
+from segmentation.bag_data import load_data
+from segmentation.unet import ResNetUNet
+from segmentation import helper
+from segmentation.fcn import FCNs, VGGNet
 
 
 def reverse_transform(inp):

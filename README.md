@@ -50,24 +50,24 @@ Build Model for Computer Vision(CV) Neural Network.
 demo1:
 
 
-<img src="./docs/7.jpg" width="600" />
+<img src="./docs/segmentation/7.jpg" width="600" />
 
 remove background:
 
 
-<img src="./docs/7-removebg-preview.png" width="600" />
+<img src="./docs/segmentation/7-removebg-preview.png" width="600" />
 
 
 
 demo2:
 
 
-<img src="./docs/red_car.png" width="600" />
+<img src="./docs/segmentation/red_car.png" width="600" />
 
 remove background:
 
 
-<img src="./docs/red_car-removebg-preview.png" width="600" />
+<img src="./docs/segmentation/red_car-removebg-preview.png" width="600" />
 
 
 # Reference

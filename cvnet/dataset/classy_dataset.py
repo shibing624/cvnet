@@ -23,10 +23,10 @@ def _return_true(_sample):
 
 
 def build_dataset(config, *args, **kwargs):
-    """Builds a :class:`ClassyDataset` from a config.
+    """Builds a :class:`ClassyDataset` from a args.
 
-    This assumes a 'name' key in the config which is used to determine what
-    dataset class to instantiate. For instance, a config `{"name": "my_dataset",
+    This assumes a 'name' key in the args which is used to determine what
+    dataset class to instantiate. For instance, a args `{"name": "my_dataset",
     "folder": "/data"}` will find a class that was registered as "my_dataset"
     (see :func:`register_dataset`) and call .from_config on it."""
     dataset = DATASET_REGISTRY[config["name"]].from_config(config, *args, **kwargs)
@@ -136,7 +136,7 @@ class ClassyDataset:
     @classmethod
     def parse_config(cls, config: Dict[str, Any]):
         """
-        This function parses out common config options.
+        This function parses out common args options.
 
         Args:
             config: A dict with the following string keys -

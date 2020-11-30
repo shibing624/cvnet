@@ -18,11 +18,11 @@ import torch.nn.init as init
 import torch.optim as optim
 import torch.utils.data
 
-sys.path.append('../../..')
-from cvnet.models.ocr.utils import CTCLabelConverter, CTCLabelConverterForBaiduWarpctc, AttnLabelConverter, Averager
-from cvnet.models.ocr.dataset import hierarchical_dataset, AlignCollate, BatchBalancedDataset
-from cvnet.models.ocr.model import Model
-from cvnet.models.ocr.test import validation
+sys.path.append('..')
+from ocr.utils import CTCLabelConverter, CTCLabelConverterForBaiduWarpctc, AttnLabelConverter, Averager
+from ocr.dataset import hierarchical_dataset, AlignCollate, BatchBalancedDataset
+from ocr.model import Model
+from ocr.test import validation
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

@@ -14,9 +14,9 @@ import torch
 from PIL import Image
 from torchvision import transforms
 
-sys.path.append("../../..")
-from cvnet.models.image_captioning.model import EncoderCNN, DecoderRNN
-from cvnet.models.image_captioning.build_vocab import Vocabulary
+sys.path.append("..")
+from image_captioning.model import EncoderCNN, DecoderRNN
+from image_captioning.build_vocab import Vocabulary
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

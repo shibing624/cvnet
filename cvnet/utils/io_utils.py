@@ -9,7 +9,7 @@ import os
 
 def load_json(json_path, encoding='utf-8'):
     """
-    Loads a json config from a file.
+    Loads a json args from a file.
     """
     assert os.path.exists(json_path), "Json file %s not found" % json_path
     with open(json_path, 'r', encoding=encoding) as f:
@@ -17,7 +17,7 @@ def load_json(json_path, encoding='utf-8'):
     try:
         config = json.loads(json_config)
     except BaseException as err:
-        raise Exception("Failed to validate config with error: %s" % str(err))
+        raise Exception("Failed to validate args with error: %s" % str(err))
 
     return config
 

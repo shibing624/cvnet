@@ -10,7 +10,6 @@ import torch.nn.functional as F
 
 
 class Attention(nn.Module):
-
     def __init__(self, input_size, hidden_size, num_classes, device='cuda'):
         super(Attention, self).__init__()
         self.attention_cell = AttentionCell(input_size, hidden_size, num_classes)
@@ -65,7 +64,6 @@ class Attention(nn.Module):
 
 
 class AttentionCell(nn.Module):
-
     def __init__(self, input_size, hidden_size, num_embeddings):
         super(AttentionCell, self).__init__()
         self.i2h = nn.Linear(input_size, hidden_size, bias=False)

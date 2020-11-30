@@ -104,11 +104,11 @@ class ImagePathDataset(ClassyDataset):
 
     @classmethod
     def from_config(cls, config: Dict[str, Any]):
-        """Instantiates ImagePathDataset from a config.
+        """Instantiates ImagePathDataset from a args.
 
         Args:
             config: A configuration for ImagePathDataset.
-                See :func:`__init__` for parameters expected in the config.
+                See :func:`__init__` for parameters expected in the args.
 
         Returns:
             An ImagePathDataset instance.

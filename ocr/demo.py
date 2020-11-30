@@ -12,10 +12,11 @@ import torch.backends.cudnn as cudnn
 import torch.nn.functional as F
 import torch.utils.data
 
-sys.path.append('../../..')
-from cvnet.models.ocr.utils import CTCLabelConverter, AttnLabelConverter
-from cvnet.models.ocr.dataset import RawDataset, AlignCollate
-from cvnet.models.ocr.model import Model
+sys.path.append('..')
+from ocr.utils import CTCLabelConverter, AttnLabelConverter
+from ocr.dataset import RawDataset, AlignCollate
+from ocr.model import Model
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 
@@ -48,6 +49,10 @@ def demo(opt):
         shuffle=False,
         num_workers=int(opt.workers),
         collate_fn=AlignCollate_demo, pin_memory=True)
+    if opt.log_file:
+        log = open(opt.log_file, 'a')
+    else:
+        log = open('log.txt', 'a')
 
     # predict
     model.eval()
@@ -75,7 +80,6 @@ def demo(opt):
                 _, preds_index = preds.max(2)
                 preds_str = converter.decode(preds_index, length_for_pred)
 
-            log = open(f'./log_demo_result.txt', 'a')
             dashed_line = '-' * 80
             head = f'{"image_path":25s}\t{"predicted_labels":25s}\tconfidence score'
 
@@ -118,6 +122,7 @@ if __name__ == '__main__':
     parser.add_argument('--FeatureExtraction', type=str, required=True, help='FeatureExtraction stage. VGG|RCNN|ResNet')
     parser.add_argument('--SequenceModeling', type=str, required=True, help='SequenceModeling stage. None|BiLSTM')
     parser.add_argument('--Prediction', type=str, required=True, help='Prediction stage. CTC|Attn')
+    parser.add_argument('--log_file', type=str, default='log_demo_result.txt', help='Prediction stage. CTC|Attn')
     parser.add_argument('--num_fiducial', type=int, default=20, help='number of fiducial points of TPS-STN')
     parser.add_argument('--input_channel', type=int, default=1, help='the number of input channel of Feature extractor')
     parser.add_argument('--output_channel', type=int, default=512,

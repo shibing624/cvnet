@@ -202,7 +202,7 @@ ranges = {
     'vgg19': ((0, 5), (5, 10), (10, 19), (19, 28), (28, 37))
 }
 
-# Vgg-Net config
+# Vgg-Net args
 # Vgg网络结构配置
 cfg = {
     'vgg11': [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
@@ -212,7 +212,7 @@ cfg = {
 }
 
 
-# make layers using Vgg-Net config(cfg)
+# make layers using Vgg-Net args(cfg)
 # 由cfg构建vgg-Net
 def make_layers(cfg, batch_norm=False):
     layers = []

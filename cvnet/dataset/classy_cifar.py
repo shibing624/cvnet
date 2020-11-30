@@ -43,7 +43,7 @@ class CIFARDataset(ClassyDataset):
 
         Args:
             config: A configuration for a CIFARDataset.
-                See :func:`__init__` for parameters expected in the config.
+                See :func:`__init__` for parameters expected in the args.
 
         Returns:
             A CIFARDataset instance.

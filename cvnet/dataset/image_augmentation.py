@@ -20,7 +20,7 @@ from cvnet.figure import plt, use_svg_display, set_figsize,show_images
 
 if __name__ == '__main__':
 
-    img = Image.open('../../docs/7.jpg')
+    img = Image.open('../../docs/segmentation/7.jpg')
     img.show()
 
     def apply(img, aug, num_rows=2, num_cols=4, scale=1.5):

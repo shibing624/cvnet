@@ -14,10 +14,10 @@ import torch.nn as nn
 from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import transforms
 
-sys.path.append("../../..")
-from cvnet.models.image_captioning.data_loader import get_loader
-from cvnet.models.image_captioning.model import EncoderCNN, DecoderRNN
-from cvnet.models.image_captioning.build_vocab import Vocabulary
+sys.path.append("..")
+from image_captioning.data_loader import get_loader
+from image_captioning.model import EncoderCNN, DecoderRNN
+from image_captioning.build_vocab import Vocabulary
 
 # Device configuration
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

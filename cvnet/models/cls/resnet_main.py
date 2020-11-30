@@ -24,9 +24,9 @@ from cvnet.utils.logger import logger
 
 def get_args():
     parser = argparse.ArgumentParser(description="PyTorch Template MNIST Train and Infer")
-    parser.add_argument("--config_file", default="", help="path to config file", type=str)
+    parser.add_argument("--config_file", default="", help="path to args file", type=str)
     parser.add_argument("--phase", default="train", help="train/test", type=str)
-    parser.add_argument("opts", help="Modify config options using the command-line", default=None,
+    parser.add_argument("opts", help="Modify args options using the command-line", default=None,
                         nargs=argparse.REMAINDER)
 
     args = parser.parse_args()
@@ -53,7 +53,7 @@ def train(args):
         with open(args.config_file, 'r') as cf:
             config_str = "\n" + cf.read()
             logger.info(config_str)
-    logger.info("Running with config:\n{}".format(cfg))
+    logger.info("Running with args:\n{}".format(cfg))
 
     model = build_model(cfg)
     optimizer = make_optimizer(cfg, model)
@@ -88,7 +88,7 @@ def test(args):
         with open(args.config_file, 'r') as cf:
             config_str = "\n" + cf.read()
             logger.info(config_str)
-    logger.info("Running with config:\n{}".format(cfg))
+    logger.info("Running with args:\n{}".format(cfg))
 
     model = build_model(cfg)
     model_path = cfg.TEST.WEIGHT
