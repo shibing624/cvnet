@@ -162,7 +162,7 @@ class GeneratedImage(torch.nn.Module):
 
 
 # 样式图像在各个样式层的格拉姆矩阵styles_Y_gram将在训练前预先计算好。
-def get_inits(X, device, lr, styles_Y):
+def get_inits(X, lr, styles_Y):
     gen_img = GeneratedImage(X.shape).to(device)
     gen_img.weight.data = X.data
     optimizer = torch.optim.Adam(gen_img.parameters(), lr=lr)
@@ -171,9 +171,9 @@ def get_inits(X, device, lr, styles_Y):
 
 
 # 训练
-def train(X, contents_Y, styles_Y, device, lr, max_epochs, lr_decay_epoch):
+def train(X, contents_Y, styles_Y, lr, max_epochs, lr_decay_epoch):
     print("training on device:", device)
-    X, styles_Y_gram, optimizer = get_inits(X, device, lr, styles_Y)
+    X, styles_Y_gram, optimizer = get_inits(X, lr, styles_Y)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, lr_decay_epoch, gamma=0.1)
     for i in range(max_epochs):
         start = time.time()
