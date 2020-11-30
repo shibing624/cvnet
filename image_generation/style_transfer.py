@@ -153,23 +153,24 @@ def train(net, X, contents_Y, styles_Y, lr, max_epochs, lr_decay_epoch,
         optimizer.step()
         scheduler.step()
 
-        if i % log_epochs == 0:
+        if (i + 1) % log_epochs == 0:
             print('epoch %3d/%3d, content loss %.2f, style loss %.2f, '
-                  'TV loss %.2f, %.2f sec'
-                  % (i + 1, max_epochs, sum(contents_l).item(), sum(styles_l).item(), tv_l.item(),
+                  'TV loss %.2f, total loss %.2f, %.2f sec'
+                  % (i + 1, max_epochs, sum(contents_l).item(), sum(styles_l).item(), tv_l.item(), loss.item(),
                      time.time() - start))
     return X.detach()
 
 
 def main(args):
+    print("device:", device)
     content_img = Image.open(args.content_img_file)
     style_img = Image.open(args.style_img_file)
     image_shape = content_img.size
     if args.image_max_size < max(content_img.size):
         scale = args.image_max_size / max(content_img.size)
-        image_shape = (np.array(content_img.size) * scale).astype(int)
+        image_shape = tuple((np.array(content_img.size) * scale).astype(int))
 
-    print("device:", device)
+    print("image_shape:", image_shape)
     net = TransferNet().to(device).eval()
     # 对内容图像抽取内容特征
     content_X = to_tensor(content_img, image_shape).to(device)
@@ -189,9 +190,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--content_img_file', type=str, default='../samples/style_transfer_png/content.png')
     parser.add_argument('--style_img_file', type=str, default='../samples/style_transfer_png/style.png')
-    parser.add_argument('--image_max_size', type=int, default=300)
-    parser.add_argument('--max_epochs', type=int, default=200)
-    parser.add_argument('--log_epochs', type=int, default=10)
+    parser.add_argument('--image_max_size', type=int, default=800)
+    parser.add_argument('--max_epochs', type=int, default=500)
+    parser.add_argument('--log_epochs', type=int, default=20)
     parser.add_argument('--lr_decay_epoch', type=int, default=200)
     parser.add_argument('--content_weight', type=float, default=1, help="weight of content loss")
     parser.add_argument('--style_weight', type=float, default=1000, help="weight of style loss")
