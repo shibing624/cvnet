@@ -3,8 +3,7 @@
 @author:XuMing(xuming624@qq.com)
 @description:
 
-reference: https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/
-03-advanced/generative_adversarial_network/main.py
+reference: https://github.com/yunjey/pytorch-tutorial/blob/master/tutorials/03-advanced/generative_adversarial_network/main.py
 """
 
 import os
