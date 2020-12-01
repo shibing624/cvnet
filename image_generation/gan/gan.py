@@ -14,7 +14,7 @@ import torch
 import torch.nn as nn
 from torchvision.utils import save_image
 
-sys.path.append("../../..")
+sys.path.append("../..")
 from cvnet.dataset import mnist
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')

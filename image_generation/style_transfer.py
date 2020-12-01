@@ -189,8 +189,7 @@ def train(X, contents_Y, styles_Y, lr, max_epochs, lr_decay_epoch):
         scheduler.step()
 
         if i % args.log_epochs == 0 and i != 0:
-            print('epoch %3d/%3d, content loss %.2f, style loss %.2f, total loss %.2f'
-                  'TV loss %.2f, %.2f sec'
+            print('epoch %3d/%3d, content loss %.2f, style loss %.2f, total loss %.2f, TV loss %.2f, %.2f sec/epoch'
                   % (i, max_epochs, sum(contents_l).item(), sum(styles_l).item(), tv_l.item(), l.item(),
                      time.time() - start))
     return X.detach()
@@ -202,7 +201,6 @@ def main():
     style_X, styles_Y = get_styles(image_shape)
     output = train(content_X, contents_Y, styles_Y, args.lr, args.max_epochs, args.lr_decay_epoch)
     out_img = postprocess(output)
-    out_img.show()
     out_img.save("style_small.png")
 
     # 为了得到更加清晰的合成图像，下面我们在更大的300×450尺寸上训练
