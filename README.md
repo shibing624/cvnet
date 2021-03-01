@@ -49,11 +49,9 @@ Build Model for Computer Vision(CV) Neural Network.
 
 demo1:
 
-
 <img src="./docs/segmentation/7.jpg" width="600" />
 
 remove background:
-
 
 <img src="./docs/segmentation/7-removebg-preview.png" width="600" />
 
@@ -61,11 +59,9 @@ remove background:
 
 demo2:
 
-
 <img src="./docs/segmentation/red_car.png" width="600" />
 
 remove background:
-
 
 <img src="./docs/segmentation/red_car-removebg-preview.png" width="600" />
 
