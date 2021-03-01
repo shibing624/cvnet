@@ -1,5 +1,5 @@
 # cvnet
-Build Model for Computer Vision(CV) Neural Network.
+Model for Computer Vision(CV) Neural Network.
 
 ## 图像分类
 
