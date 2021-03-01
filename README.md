@@ -2,7 +2,7 @@
 Model for Computer Vision(CV) Neural Network.
 
 ## 图像分类
-
+image classification
 
 ## 图像分割
 
