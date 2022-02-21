@@ -17,6 +17,15 @@ image classification
 3. 2015年后，深度学习：1）经典分割算法：FCN, U-Net, SegNet, DeepLab; 2)实时分割算法：ENet, LinkNet, BiSeNet, DFANet, Light-Weight RefineNet; 3)RGB-D分割算法：RedNet, RDFNet
 
 
+#### MEAL-V2
+https://github.com/szq0214/MEAL-V2
+
+介绍他们如何通过蒸馏（distillation）训练一个强大的小模型。所提出方法使用相同模型结构和输入图片大小的前提下，
+在 ImageNet 上的性能远超之前 state-of-the-art 的 FixRes 2.5% 以上，甚至超过了魔改结构的 ResNeSt 的结果。
+
+https://www.jiqizhixin.com/articles/2020-09-29-2
+
+
 ### Networks implemented
 
 * [PSPNet](https://arxiv.org/abs/1612.01105) - With support for loading pretrained models w/o caffe dependency
