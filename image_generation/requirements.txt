@@ -1,4 +1,4 @@
 torch>=1.4.0
 torchvision
-pytorch-lightning==1.0.6
+pytorch-lightning==2.4.0
 Pillow
